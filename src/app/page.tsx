@@ -9,7 +9,7 @@ export const revalidate = 0;
 export default async function Home() {
   return (
     <>
-      <h1 className="text-2xl text-slate-200 font-bold mb-8">Your feed...</h1>
+      <h1 className="text-3xl text-slate-200 font-bold mb-8">Your feed...</h1>
       {/* <Form orientation={"landscape"} /> */}
       <Suspense fallback={<PostsSkeleton />}>
         <PostList />

@@ -27,9 +27,9 @@ export default function RootLayout({
       </head>
       <body className={roboto.className}>
         <Provider>
-          <div className="flex gap-8">
+          <div className="md:flex gap-8">
             <Navbar />
-            <main className="h-screen overflow-y-scroll w-full p-8">
+            <main className="md:h-screen md:overflow-y-scroll w-full p-8">
               {children}
             </main>
           </div>

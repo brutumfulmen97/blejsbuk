@@ -7,7 +7,7 @@ import {
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import Image from "next/image";
 import Link from "next/link";
-import { User } from "lucide-react";
+import { Edit2, Home, User } from "lucide-react";
 
 const Navbar = async () => {
   const { isAuthenticated } = await getKindeServerSession();
@@ -27,8 +27,8 @@ const Navbar = async () => {
   ];
 
   return (
-    <nav className="bg-slate-900 h-screen w-[300px] flex flex-col justify-between p-8 ">
-      <div className="flex flex-col gap-8">
+    <nav className="bg-slate-900 md:h-screen md:w-[300px] flex md:flex-col md:justify-between justify-center gap-1 md:gap-8 p-1 md:p-8 items-center md:items-start">
+      <div className="flex md:flex-col gap-1 md:gap-8 items-center md:items-start">
         {routes.map((route) => {
           if (route.href === "/") {
             return (
@@ -36,11 +36,16 @@ const Navbar = async () => {
                 key={route.href}
                 className="flex items-center justify-center"
               >
-                <Link href={route.href}>
+                <Link
+                  href={route.href}
+                  className="p-4 rounded-md  hover:bg-slate-500"
+                >
+                  <Home size={20} className="block md:hidden" />
                   <Image
                     src="/logo.png"
                     width={100}
                     height={100}
+                    className="hidden md:block"
                     alt="blejsbuk logo"
                   />
                 </Link>
@@ -49,9 +54,21 @@ const Navbar = async () => {
           }
           if (route.protected && !isAuthed) return null;
           return (
-            <NavLink key={route.href} href={route.href}>
-              {route.text}
-            </NavLink>
+            <>
+              <Link
+                href={route.href}
+                className="md:hidden p-4 rounded-md  hover:bg-slate-500"
+              >
+                <Edit2 size={20} />
+              </Link>
+              <NavLink
+                key={route.href}
+                href={route.href}
+                className="md:block hidden"
+              >
+                {route.text}
+              </NavLink>
+            </>
           );
         })}
       </div>
@@ -62,9 +79,9 @@ const Navbar = async () => {
         </div>
       ) : (
         <div className="flex justify-center">
-          <div className="group cursor-pointer relative w-[fit-content] rounded-full p-4 bg-slate-600 hover:bg-slate-500">
+          <div className="group cursor-pointer relative w-[fit-content] rounded-md md:rounded-full p-4 md:bg-slate-600 hover:bg-slate-500">
             <User size={20} />
-            <div className="scale-0 group-hover:scale-100 flex flex-col gap-4 w-[200px] rounded-md p-4 bg-[rgb(71,85,105,0.5)] absolute bottom-8 left-8 z-20">
+            <div className="scale-0 group-hover:scale-100 flex flex-col gap-4 w-[150px] rounded-md p-4 bg-[rgb(71,85,105,0.5)] absolute md:bottom-8 md:left-8 left-8 top:8 z-20 transition-all duration-300 ease-in origin-top-left md:origin-bottom-left">
               <Link href="/profile" className="hover:underline">
                 Go to profile
               </Link>
