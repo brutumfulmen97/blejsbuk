@@ -7,6 +7,7 @@ import {
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import Image from "next/image";
 import Link from "next/link";
+import { User } from "lucide-react";
 
 const Navbar = async () => {
   const { isAuthenticated } = await getKindeServerSession();
@@ -17,11 +18,6 @@ const Navbar = async () => {
       href: "/",
       text: "Home",
       protected: false,
-    },
-    {
-      href: "/my-posts",
-      text: "My posts",
-      protected: true,
     },
     {
       href: "/create",
@@ -65,8 +61,16 @@ const Navbar = async () => {
           <RegisterLink>Register</RegisterLink>
         </div>
       ) : (
-        <div className="h-8">
-          <LogoutLink>Log out</LogoutLink>
+        <div className="flex justify-center">
+          <div className="group cursor-pointer relative w-[fit-content] rounded-full p-4 bg-slate-600 hover:bg-slate-500">
+            <User size={20} />
+            <div className="scale-0 group-hover:scale-100 flex flex-col gap-4 w-[200px] rounded-md p-4 bg-[rgb(71,85,105,0.5)] absolute bottom-8 left-8 z-20">
+              <Link href="/profile" className="hover:underline">
+                Go to profile
+              </Link>
+              <LogoutLink className="hover:underline">Log out</LogoutLink>
+            </div>
+          </div>
         </div>
       )}
     </nav>

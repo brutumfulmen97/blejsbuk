@@ -6,7 +6,7 @@ import prisma from "~/lib/prisma";
 export const appRouter = router({
   getPosts: publicProcedure.query(async () => {
     await new Promise((resolve) => setTimeout(resolve, 3000));
-    return await prisma?.post.findMany();
+    return await prisma?.post.findMany({ orderBy: { createdAt: "desc" } });
   }),
   getPostById: publicProcedure
     .input(

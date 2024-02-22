@@ -40,7 +40,7 @@ const Post: FC<PostProps> = ({ post }) => {
       </p>
       {new Date(post.editedAt).getTime() !==
         new Date(post.createdAt).getTime() && (
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-500 -mt-2">
           Edited {formatDistanceToNow(post.editedAt)} ago
         </p>
       )}
@@ -73,12 +73,7 @@ const Post: FC<PostProps> = ({ post }) => {
         {post.title}
       </Link>
       <p>{post.content}</p>
-      <Link
-        href={`/profile/${post.authorId}`}
-        className="text-end w-full hover:underline"
-      >
-        by: {post.authorName}
-      </Link>
+      <p className="text-end w-full">by: {post.authorName}</p>
     </div>
   );
 };
