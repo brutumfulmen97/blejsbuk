@@ -1,9 +1,9 @@
 import { appRouter } from "~/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-import { auth } from "@clerk/nextjs";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 const handler = async (req: Request) => {
-  const authentication = await auth();
+  const authentication = await getKindeServerSession();
   return fetchRequestHandler({
     endpoint: "/api/trpc",
     req,
