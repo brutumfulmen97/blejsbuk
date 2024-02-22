@@ -22,6 +22,38 @@ export const appRouter = router({
       },
     });
   }),
+  deletePost: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        authorId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.auth?.id) {
+        throw new TRPCError({
+          message: "You must be logged in to delete a post.",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      if (ctx.auth.id != input.authorId) {
+        throw new TRPCError({
+          message: "You are not authorized to delete this post.",
+          code: "FORBIDDEN",
+        });
+      }
+
+      await prisma?.post.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return {
+        success: true,
+      };
+    }),
   getUsers: publicProcedure.query(async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const users = [

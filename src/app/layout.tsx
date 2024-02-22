@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 import Provider from "./_trpc/Provider";
 import Navbar from "~/components/Navbar";
 
-const inter = Inter({ subsets: ["latin"] });
+const roboto = Roboto({
+  fallback: ["system-ui", "sans-serif"],
+  weight: ["300", "400", "500", "700", "900"],
+  subsets: ["latin-ext"],
+});
 
 export const metadata: Metadata = {
   title: "Blejsbuk",
@@ -21,7 +25,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.png" sizes="any" />
       </head>
-      <body className={inter.className}>
+      <body className={roboto.className}>
         <Provider>
           <div className="flex gap-8">
             <Navbar />
