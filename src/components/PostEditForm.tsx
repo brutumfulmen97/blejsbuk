@@ -1,4 +1,21 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { FC } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { trpc } from "~/app/_trpc/client";
+
+type Inputs = {
+  title: string;
+  content: string;
+};
+
+const schema = z.object({
+  title: z.string().min(2),
+  content: z.string().min(2),
+});
 
 interface PostEditFormProps {
   post: {
@@ -12,7 +29,65 @@ interface PostEditFormProps {
 }
 
 const PostEditForm: FC<PostEditFormProps> = ({ post }) => {
-  return <div>PostEditForm</div>;
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    mutation.mutate({ ...data, id: post.id });
+  };
+
+  const mutation = trpc.editPost.useMutation({
+    onSettled: () => {
+      router.push("/");
+      router.refresh();
+    },
+  });
+
+  return (
+    <form
+      className="mb-12 p-8 items-center rounded-md bg-slate-800 text-white outline outline-slate-500 w-[400px] flex flex-col gap-8"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <label htmlFor="title">Title</label>
+      <input
+        placeholder="..."
+        className="text-slate-100 px-4 py-1 rounded-md w-full bg-[rgb(255,255,255,0.2)]"
+        type="text"
+        defaultValue={post.title}
+        {...register("title")}
+      />
+      {errors.title && (
+        <span className="text-red-400 font-bold">
+          This field needs to be at least 2 chars long...
+        </span>
+      )}
+      <label htmlFor="content">Content</label>
+      <textarea
+        rows={6}
+        placeholder="..."
+        className="text-slate-100 px-4 py-1 rounded-md w-full resize-none bg-[rgb(255,255,255,0.2)]"
+        defaultValue={post.content}
+        {...register("content")}
+      />
+      {errors.content && (
+        <span className="text-red-400 font-bold">
+          This field needs to be at least 2 chars long...
+        </span>
+      )}
+      <button
+        type="submit"
+        className="mt-4 px-4 py-2 bg-teal-600 hover:bg-teal-800 rounded-md"
+      >
+        EDIT
+      </button>
+    </form>
+  );
 };
 
 export default PostEditForm;

@@ -19,7 +19,11 @@ const page: FC<pageProps> = async ({ params }) => {
     return <div>Post not found!</div>;
   }
 
-  return <PostEditForm post={post} />;
+  return (
+    <div className="w-full h-screen grid place-content-center">
+      <PostEditForm post={post} />
+    </div>
+  );
 };
 
 export default page;

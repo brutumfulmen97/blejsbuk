@@ -15,6 +15,7 @@ interface PostProps {
     authorId: string;
     authorName: string;
     createdAt: Date;
+    editedAt: Date;
   };
 }
 
@@ -35,8 +36,14 @@ const Post: FC<PostProps> = ({ post }) => {
   return (
     <div className="relative mb-8 w-full bg-zinc-900 rounded-lg p-8 flex flex-col gap-4">
       <p className="text-slate-300 text-sm">
-        {formatDistanceToNow(post.createdAt)} ago
+        Posted {formatDistanceToNow(post.createdAt)} ago
       </p>
+      {new Date(post.editedAt).getTime() !==
+        new Date(post.createdAt).getTime() && (
+        <p className="text-xs text-slate-500">
+          Edited {formatDistanceToNow(post.editedAt)} ago
+        </p>
+      )}
       <div className="flex gap-4 justify-end absolute right-8 top-8">
         {user && user.id == post.authorId && (
           <>
