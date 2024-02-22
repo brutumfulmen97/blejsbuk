@@ -21,20 +21,21 @@ export const appRouter = router({
         },
       });
     }),
-  getPostsByUser: protectedProcedure.query(async ({ ctx }) => {
-    if (!ctx.auth?.id) {
-      throw new TRPCError({
-        message: "You must be logged in to view your posts.",
-        code: "UNAUTHORIZED",
+  getPostsByUser: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      if (!input.id) {
+        throw new TRPCError({
+          message: "You must provide an id to get the posts of a user.",
+          code: "BAD_REQUEST",
+        });
+      }
+      return await prisma?.post.findMany({
+        where: {
+          authorId: input?.id,
+        },
       });
-    }
-
-    return await prisma?.post.findMany({
-      where: {
-        authorId: ctx.auth?.id,
-      },
-    });
-  }),
+    }),
   deletePost: protectedProcedure
     .input(
       z.object({
