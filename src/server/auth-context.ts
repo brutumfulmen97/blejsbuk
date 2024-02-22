@@ -1,8 +1,9 @@
 import * as trpcNext from "@trpc/server/adapters/next";
-import { withAuth } from "@kinde-oss/kinde-auth-nextjs/middleware";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/dist/types";
 
 interface AuthContext {
-  auth: any;
+  auth: KindeUser | null;
 }
 
 export const createContextInner = async ({ auth }: AuthContext) => {
@@ -14,7 +15,10 @@ export const createContextInner = async ({ auth }: AuthContext) => {
 export const createContext = async (
   opts: trpcNext.CreateNextContextOptions
 ) => {
-  return await createContextInner({ auth: withAuth(opts.req) });
+  const { getUser } = await getKindeServerSession();
+  const user = await getUser();
+
+  return await createContextInner({ auth: user });
 };
 
 export type Context = Awaited<ReturnType<typeof createContext>>;

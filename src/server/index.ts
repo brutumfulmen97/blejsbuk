@@ -9,7 +9,7 @@ export const appRouter = router({
     return await prisma?.post.findMany();
   }),
   getPostsByUser: protectedProcedure.query(async ({ ctx }) => {
-    if (!ctx.auth.userId) {
+    if (!ctx.auth?.id) {
       throw new TRPCError({
         message: "You must be logged in to view your posts.",
         code: "UNAUTHORIZED",
@@ -18,7 +18,7 @@ export const appRouter = router({
 
     return await prisma?.post.findMany({
       where: {
-        authorId: ctx.auth.userId,
+        authorId: ctx.auth?.id,
       },
     });
   }),
@@ -33,7 +33,7 @@ export const appRouter = router({
   }),
   hello: protectedProcedure.query(({ ctx }) => {
     return {
-      secret: `${ctx.auth?.userId} is using a protected procedure`,
+      secret: `${ctx.auth?.id} is using a protected procedure`,
     };
   }),
   submitPost: protectedProcedure
@@ -44,7 +44,7 @@ export const appRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.auth.userId) {
+      if (!ctx.auth?.id) {
         throw new TRPCError({
           message: "You must be logged in to create a post.",
           code: "UNAUTHORIZED",
@@ -55,7 +55,7 @@ export const appRouter = router({
         data: {
           title: input.title,
           content: input.content,
-          authorId: ctx.auth.userId,
+          authorId: ctx.auth.id,
         },
       });
 

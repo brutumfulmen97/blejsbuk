@@ -1,16 +1,18 @@
-import { serverClient } from "./_trpc/serverClient";
+import { Suspense } from "react";
+import PostList from "~/components/PostList";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function Home() {
-  const users = await serverClient.getUsers();
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1>cao</h1>
-      {users.map((user) => (
-        <div key={user.id}>
-          <h2>{user.name}</h2>
-        </div>
-      ))}
-    </main>
+    <>
+      <h1 className="text-2xl text-slate-200 font-bold mb-12">
+        Here are the posts...
+      </h1>
+      <Suspense fallback={<div>Loading...</div>}>
+        <PostList />
+      </Suspense>
+    </>
   );
 }
