@@ -8,6 +8,19 @@ export const appRouter = router({
     await new Promise((resolve) => setTimeout(resolve, 3000));
     return await prisma?.post.findMany();
   }),
+  getPostById: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ input }) => {
+      return await prisma?.post.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
   getPostsByUser: protectedProcedure.query(async ({ ctx }) => {
     if (!ctx.auth?.id) {
       throw new TRPCError({
@@ -25,7 +38,7 @@ export const appRouter = router({
   deletePost: protectedProcedure
     .input(
       z.object({
-        id: z.number(),
+        id: z.string(),
         authorId: z.string(),
       })
     )
@@ -54,20 +67,6 @@ export const appRouter = router({
         success: true,
       };
     }),
-  getUsers: publicProcedure.query(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const users = [
-      { id: 1, name: "John" },
-      { id: 2, name: "Jane" },
-    ];
-
-    return users;
-  }),
-  hello: protectedProcedure.query(({ ctx }) => {
-    return {
-      secret: `${ctx.auth?.id} is using a protected procedure`,
-    };
-  }),
   submitPost: protectedProcedure
     .input(
       z.object({
@@ -88,6 +87,7 @@ export const appRouter = router({
           title: input.title,
           content: input.content,
           authorId: ctx.auth.id,
+          authorName: ctx.auth.given_name + " " + ctx.auth.family_name,
         },
       });
 
