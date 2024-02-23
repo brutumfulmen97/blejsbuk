@@ -205,6 +205,7 @@ export const appRouter = router({
   getFilteredCommunities: publicProcedure
     .input(z.string())
     .query(async ({ input }) => {
+      if (input === "") return;
       return await prisma?.subreddit.findMany({
         where: {
           name: {
