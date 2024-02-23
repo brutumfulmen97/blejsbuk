@@ -1,13 +1,14 @@
 "use client";
 
-import { FC, Suspense, useRef } from "react";
-import { Edit, Loader2, Trash } from "lucide-react";
+import { FC, Suspense, useRef, useState } from "react";
+import { ChevronDown, Edit, Loader2, Trash } from "lucide-react";
 import { trpc } from "~/app/_trpc/client";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { ForwardRefROEditor } from "./Editor/ForwardRefROEditor";
+import clsx from "clsx";
 interface PostProps {
   post: {
     id: string;
@@ -27,6 +28,7 @@ interface PostProps {
 const Post: FC<PostProps> = ({ post }) => {
   const router = useRouter();
   const editorRef = useRef(null);
+  const [showMore, setShowMore] = useState(false);
 
   const mutation = trpc.deletePost.useMutation({
     onMutate: () => {
@@ -86,13 +88,40 @@ const Post: FC<PostProps> = ({ post }) => {
         {post.title}
       </Link>
       <Suspense fallback={<p>Loading...</p>}>
-        <ForwardRefROEditor
-          markdown={post.content}
-          className="pointer-events-none light-editor"
-          ref={editorRef}
-        />
+        <div
+          className={clsx(
+            "relative w-full overflow-y-hidden",
+            showMore ? "max-h-auto" : "max-h-[100px]"
+          )}
+        >
+          <ForwardRefROEditor
+            markdown={post.content}
+            className="px-2 pointer-events-none light-editor"
+            ref={editorRef}
+          />
+          <div
+            className="absolute bottom-0 w-full h-full"
+            style={{
+              background: !showMore
+                ? "linear-gradient(to top, #18181b, transparent)"
+                : "transparent",
+            }}
+          ></div>
+          <ChevronDown
+            size={24}
+            className={clsx(
+              "absolute bottom-0 left-1/2 -translate-x-1/2 transition-all duration-300 ease-in-out hover:opacity-70 cursor-pointer",
+              showMore ? "rotate-180" : ""
+            )}
+            onClick={() => {
+              setShowMore(!showMore);
+            }}
+          />
+        </div>
       </Suspense>
-      <p className="text-end w-full">by: {post.authorName}</p>
+      <p className="absolute bottom-4 right-4 text-sm text-slate-300">
+        by: {post.authorName}
+      </p>
     </div>
   );
 };
