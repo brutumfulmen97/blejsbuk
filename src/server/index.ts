@@ -5,7 +5,10 @@ import prisma from "~/lib/prisma";
 
 export const appRouter = router({
   getPosts: publicProcedure.query(async () => {
-    return await prisma?.post.findMany({ orderBy: { createdAt: "desc" } });
+    return await prisma?.post.findMany({
+      orderBy: { createdAt: "desc" },
+      include: { Subreddit: true },
+    });
   }),
   getPostById: publicProcedure
     .input(
@@ -121,6 +124,7 @@ export const appRouter = router({
     .input(
       z.object({
         title: z.string(),
+        subredditId: z.string().optional(),
         content: z.string(),
       })
     )
@@ -132,18 +136,82 @@ export const appRouter = router({
         });
       }
 
-      await prisma?.post.create({
-        data: {
-          title: input.title,
-          content: input.content,
-          authorId: ctx.auth.id,
-          authorName: ctx.auth.given_name + " " + ctx.auth.family_name,
+      try {
+        await prisma?.post.create({
+          data: {
+            title: input.title,
+            content: input.content,
+            authorId: ctx.auth.id,
+            authorName: ctx.auth.given_name + " " + ctx.auth.family_name,
+            subredditId: input.subredditId ?? "general",
+          },
+        });
+        return {
+          success: true,
+        };
+      } catch (e) {
+        console.log(e);
+        return {
+          success: false,
+        };
+      }
+    }),
+  createSubreddit: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        description: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.auth?.id) {
+        throw new TRPCError({
+          message: "You must be logged in to create a post.",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      try {
+        await prisma?.subreddit.create({
+          data: {
+            name: input.name,
+            description: input.description,
+            authorId: ctx.auth.id,
+            authorName: ctx.auth.given_name + " " + ctx.auth.family_name,
+          },
+        });
+        return {
+          success: true,
+        };
+      } catch (e) {
+        console.log(e);
+        return {
+          success: false,
+        };
+      }
+    }),
+  getCommunity: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      return await prisma?.subreddit.findUnique({
+        where: {
+          id: input.id,
         },
       });
-
-      return {
-        success: true,
-      };
+    }),
+  getCommunities: publicProcedure.query(async () => {
+    return await prisma?.subreddit.findMany();
+  }),
+  getFilteredCommunities: publicProcedure
+    .input(z.string())
+    .query(async ({ input }) => {
+      return await prisma?.subreddit.findMany({
+        where: {
+          name: {
+            contains: input,
+          },
+        },
+      });
     }),
 });
 

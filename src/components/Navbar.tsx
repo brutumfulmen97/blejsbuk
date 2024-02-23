@@ -7,7 +7,8 @@ import {
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import Image from "next/image";
 import Link from "next/link";
-import { Edit2, Home, User } from "lucide-react";
+import { CircleFadingPlus, Edit2, Home, User } from "lucide-react";
+import Search from "./Search";
 
 const Navbar = async () => {
   const { isAuthenticated } = await getKindeServerSession();
@@ -24,6 +25,11 @@ const Navbar = async () => {
       text: "Create new post",
       protected: true,
     },
+    {
+      href: "/create-community",
+      text: "Create new community",
+      protected: true,
+    },
   ];
 
   return (
@@ -36,10 +42,7 @@ const Navbar = async () => {
                 key={route.href}
                 className="flex items-center justify-center"
               >
-                <Link
-                  href={route.href}
-                  className="p-4 rounded-md  hover:bg-slate-500"
-                >
+                <NavLink href={route.href}>
                   <Home size={20} className="block md:hidden" />
                   <Image
                     src="/logo.png"
@@ -48,19 +51,23 @@ const Navbar = async () => {
                     className="hidden md:block"
                     alt="blejsbuk logo"
                   />
-                </Link>
+                </NavLink>
               </div>
             );
           }
           if (route.protected && !isAuthed) return null;
           return (
             <>
-              <Link
+              <NavLink
                 href={route.href}
                 className="md:hidden p-4 rounded-md  hover:bg-slate-500"
               >
-                <Edit2 size={20} />
-              </Link>
+                {route.href === "/create" ? (
+                  <Edit2 size={20} />
+                ) : (
+                  <CircleFadingPlus size={20} />
+                )}
+              </NavLink>
               <NavLink
                 key={route.href}
                 href={route.href}
@@ -79,7 +86,7 @@ const Navbar = async () => {
         </div>
       ) : (
         <div className="flex justify-center">
-          <div className="group cursor-pointer relative w-[fit-content] rounded-md md:rounded-full p-4 md:bg-slate-600 hover:bg-slate-500">
+          <div className="group cursor-pointer relative w-[fit-content] rounded-md md:rounded-full p-4 md:bg-slate-600 bg-zinc-600 hover:bg-slate-500">
             <User size={20} />
             <div className="scale-0 group-hover:scale-100 flex flex-col gap-4 w-[150px] rounded-md p-4 bg-[rgb(71,85,105,0.5)] absolute md:bottom-8 md:left-8 left-8 top:8 z-20 transition-all duration-300 ease-in origin-top-left md:origin-bottom-left">
               <Link href="/profile" className="hover:underline">
@@ -90,6 +97,7 @@ const Navbar = async () => {
           </div>
         </div>
       )}
+      <Search />
     </nav>
   );
 };

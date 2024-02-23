@@ -20,8 +20,9 @@ export default function NavLink({
       href={href}
       className={clsx(
         className,
-        "px-4 py-2 rounded-md text-white hover:bg-teal-800",
-        pathname === href ? "bg-teal-600" : "bg-zinc-600"
+        "p-4 md:py-2 rounded-md text-white hover:bg-teal-800 whitespace-nowrap",
+        pathname === href ? "bg-teal-600" : "bg-zinc-600",
+        href === "/" ? "md:bg-transparent" : ""
       )}
     >
       {children}

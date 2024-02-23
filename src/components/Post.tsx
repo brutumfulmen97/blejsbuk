@@ -17,6 +17,10 @@ interface PostProps {
     authorName: string;
     createdAt: Date;
     editedAt: Date;
+    Subreddit: {
+      name: string;
+      id: string;
+    };
   };
 }
 
@@ -38,7 +42,14 @@ const Post: FC<PostProps> = ({ post }) => {
   return (
     <div className="relative mb-8 w-full bg-zinc-900 rounded-lg p-8 flex flex-col gap-4">
       <p className="text-slate-300 text-sm">
-        Posted {formatDistanceToNow(post.createdAt)} ago
+        Posted {formatDistanceToNow(post.createdAt)} ago{" "}
+        <Link
+          href={`/community/${post.Subreddit.id}`}
+          className="text-slate-400 hover:underline"
+        >
+          in r/
+          {post.Subreddit.name}
+        </Link>
       </p>
       {new Date(post.editedAt).getTime() !==
         new Date(post.createdAt).getTime() && (
