@@ -21,6 +21,7 @@ export const appRouter = router({
         where: {
           id: input.id,
         },
+        include: { Subreddit: true },
       });
     }),
   getPostsByUser: publicProcedure
@@ -36,6 +37,7 @@ export const appRouter = router({
         where: {
           authorId: input?.id,
         },
+        include: { Subreddit: true },
       });
     }),
   editPost: protectedProcedure
@@ -174,7 +176,7 @@ export const appRouter = router({
       try {
         await prisma?.subreddit.create({
           data: {
-            name: input.name,
+            name: input.name.toLowerCase(),
             description: input.description,
             authorId: ctx.auth.id,
             authorName: ctx.auth.given_name + " " + ctx.auth.family_name,
@@ -209,7 +211,7 @@ export const appRouter = router({
       return await prisma?.subreddit.findMany({
         where: {
           name: {
-            contains: input,
+            contains: input.toLowerCase(),
           },
         },
       });
