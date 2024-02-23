@@ -1,5 +1,4 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { Plus } from "lucide-react";
 import { FC } from "react";
 import { serverClient } from "~/app/_trpc/serverClient";
 import JoinButton from "~/components/JoinButton";
@@ -50,7 +49,7 @@ const page: FC<Props> = async ({ params }) => {
         subreddit.members.includes(user.id) && (
           <PostToCommunity communityId={subreddit.id} />
         )}
-      <div className="mt-4">
+      <div className="mt-8">
         {posts.map((post) => (
           <Post key={post.id} post={post} />
         ))}

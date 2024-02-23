@@ -64,3 +64,11 @@ body {
   --baseTextContrast: #fff;
   --baseBg: #343442;
 }
+
+[class^="_contentEditable"] ul li {
+  list-style: circle !important;
+}
+
+[class^="_contentEditable"] ol li {
+  list-style: decimal !important;
+}

@@ -38,6 +38,7 @@ export const appRouter = router({
           authorId: input?.id,
         },
         include: { Subreddit: true },
+        orderBy: { createdAt: "desc" },
       });
     }),
   editPost: protectedProcedure
@@ -228,7 +229,38 @@ export const appRouter = router({
           subredditId: input.id,
         },
         include: { Subreddit: true },
+        orderBy: { createdAt: "desc" },
       });
+    }),
+  commentOnPost: protectedProcedure
+    .input(
+      z.object({
+        content: z.string(),
+        postId: z.string(),
+        authorId: z.string(),
+        authorName: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.auth?.id) {
+        throw new TRPCError({
+          message: "You must be logged in to comment on a post.",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      await prisma?.comment.create({
+        data: {
+          content: input.content,
+          postId: input.postId,
+          authorId: ctx.auth.id,
+          authorName: ctx.auth.given_name + " " + ctx.auth.family_name,
+        },
+      });
+
+      return {
+        success: true,
+      };
     }),
   editCommunityMembers: protectedProcedure
     .input(z.object({ id: z.string(), action: z.enum(["join", "leave"]) }))

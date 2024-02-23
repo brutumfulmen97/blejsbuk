@@ -24,6 +24,7 @@ export default function InitializedEditor({
 }: { editorRef: ForwardedRef<MDXEditorMethods> | null } & MDXEditorProps) {
   return (
     <MDXEditor
+      className="editor"
       plugins={[
         frontmatterPlugin(),
         headingsPlugin(),

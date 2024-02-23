@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { Suspense, useRef, useState } from "react";
 import { ForwardRefEditor } from "./Editor/ForwardRefEditor";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Loader2 } from "lucide-react";
+import { set } from "date-fns";
 
 type Inputs = {
   title: string;
@@ -40,8 +41,9 @@ function PostToCommunity({ communityId }: { communityId: string }) {
 
   const mutation = trpc.submitPost.useMutation({
     onSettled: () => {
-      router.push("/");
       router.refresh();
+      setIsHidden(true);
+      setMarkdown("");
     },
   });
 
@@ -88,9 +90,13 @@ function PostToCommunity({ communityId }: { communityId: string }) {
         </Suspense>
         <button
           type="submit"
-          className="mt-4 px-4 py-2 bg-teal-600 hover:bg-teal-800 rounded-md"
+          className="flex justify-center mt-4 px-4 py-2 bg-teal-600 hover:bg-teal-800 rounded-md"
         >
-          SUBMIT
+          {mutation.isPending ? (
+            <Loader2 size={20} className="animate-spin" />
+          ) : (
+            "SUBMIT"
+          )}
         </button>
       </div>
     </form>

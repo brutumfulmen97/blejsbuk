@@ -39,22 +39,25 @@ function CreateCommunityForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-4 items-center justify-center"
+      className="flex flex-col gap-4 items-end justify-end"
     >
       <input
         type="text"
         {...register("name")}
         placeholder="name"
-        className="text-black p-2 rounded-md"
+        className="text-black p-2 rounded-md w-full"
       />
-      <input
-        type="text"
+      <textarea
+        rows={5}
         {...register("description")}
         placeholder="description"
-        className="text-black p-2 rounded-md"
+        className="text-black p-2 rounded-md w-full"
       />
-      <button type="submit" className="rounded-md py-2 px-4 bg-teal-600">
-        create community
+      <button
+        type="submit"
+        className="rounded-md py-2 px-4 bg-teal-600 hover:bg-teal-800"
+      >
+        Create community
       </button>
     </form>
   );

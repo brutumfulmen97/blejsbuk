@@ -61,10 +61,10 @@ const Navbar = async () => {
           }
           if (route.protected && !isAuthed) return null;
           return (
-            <>
+            <div key={route.href} className="md:w-full">
               <NavLink
                 href={route.href}
-                className="md:hidden p-4 rounded-md  hover:bg-slate-500"
+                className="md:hidden p-4 rounded-md  hover:bg-slate-500 block "
               >
                 {route.href === "/create" ? (
                   <Edit2 size={20} />
@@ -72,14 +72,10 @@ const Navbar = async () => {
                   <CircleFadingPlus size={20} />
                 )}
               </NavLink>
-              <NavLink
-                key={route.href}
-                href={route.href}
-                className="md:block hidden"
-              >
+              <NavLink href={route.href} className="md:block hidden w-full">
                 {route.text}
               </NavLink>
-            </>
+            </div>
           );
         })}
       </div>

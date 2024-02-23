@@ -9,6 +9,7 @@ import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { ForwardRefROEditor } from "./Editor/ForwardRefROEditor";
 import clsx from "clsx";
+import Comment from "./Comment";
 interface PostProps {
   post: {
     id: string;
@@ -43,6 +44,7 @@ const Post: FC<PostProps> = ({ post }) => {
 
   return (
     <div className="relative mb-8 w-full bg-zinc-900 rounded-lg p-8 flex flex-col gap-4">
+      <p className="text-sm text-slate-300">by: {post.authorName}</p>
       <p className="text-slate-300 text-sm">
         Posted {formatDistanceToNow(post.createdAt)} ago{" "}
         <Link
@@ -119,9 +121,7 @@ const Post: FC<PostProps> = ({ post }) => {
           />
         </div>
       </Suspense>
-      <p className="absolute bottom-4 right-4 text-sm text-slate-300">
-        by: {post.authorName}
-      </p>
+      {user && <Comment postId={post.id} />}
     </div>
   );
 };

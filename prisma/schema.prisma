@@ -18,6 +18,7 @@ model Post {
   authorName  String
   subredditId String
   Subreddit   Subreddit @relation(fields: [subredditId], references: [id])
+  Comment     Comment[]
 }
 
 model Subreddit {
@@ -29,4 +30,15 @@ model Subreddit {
   authorName  String
   Posts       Post[]
   members     String[]
+}
+
+model Comment {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  editedAt   DateTime @default(now()) @updatedAt
+  content    String
+  authorId   String
+  authorName String
+  postId     String
+  Post       Post     @relation(fields: [postId], references: [id])
 }
