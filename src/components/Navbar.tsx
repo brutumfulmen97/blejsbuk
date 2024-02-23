@@ -73,7 +73,7 @@ const Navbar = async () => {
         })}
       </div>
       {!isAuthed ? (
-        <div className="flex md:flex-col gap-8 ml-auto mr-4">
+        <div className="flex md:flex-col gap-8 md:ml-0 ml-auto mr-4">
           <LoginLink className="hover:underline">Log in</LoginLink>
           <RegisterLink className="hover:underline">Register</RegisterLink>
         </div>

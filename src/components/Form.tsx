@@ -6,15 +6,15 @@ import { z } from "zod";
 import { trpc } from "~/app/_trpc/client";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
+import { Suspense, useRef, useState } from "react";
+import { ForwardRefEditor } from "./Editor/ForwardRefEditor";
 
 type Inputs = {
   title: string;
-  content: string;
 };
 
 const schema = z.object({
   title: z.string().min(2),
-  content: z.string().min(2),
 });
 
 const Form = ({
@@ -23,6 +23,9 @@ const Form = ({
   orientation: "portrait" | "landscape";
 }) => {
   const router = useRouter();
+  const [markdown, setMarkdown] = useState("");
+  const editorRef = useRef(null);
+
   const {
     register,
     handleSubmit,
@@ -31,7 +34,10 @@ const Form = ({
     resolver: zodResolver(schema),
   });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    mutation.mutate(data);
+    mutation.mutate({
+      title: data.title,
+      content: markdown,
+    });
   };
 
   const mutation = trpc.submitPost.useMutation({
@@ -46,7 +52,7 @@ const Form = ({
       className={clsx(
         "mb-12 p-8 items-center rounded-md bg-slate-800 text-white outline outline-slate-500",
         orientation === "portrait"
-          ? "w-[400px] flex flex-col gap-8"
+          ? "flex flex-col gap-4"
           : "w-full flex flex-col gap-8"
       )}
       onSubmit={handleSubmit(onSubmit)}
@@ -57,7 +63,7 @@ const Form = ({
       <label htmlFor="title">Title</label>
       <input
         placeholder="..."
-        className="text-slate-100 px-4 py-1 rounded-md w-full bg-[rgb(255,255,255,0.2)]"
+        className="text-[#60646c] px-4 py-1 rounded-md w-full bg-white"
         type="text"
         defaultValue=""
         {...register("title")}
@@ -67,19 +73,17 @@ const Form = ({
           This field needs to be at least 2 chars long...
         </span>
       )}
-      <label htmlFor="content">Content</label>
-      <textarea
-        rows={6}
-        placeholder="..."
-        className="text-slate-100 px-4 py-1 rounded-md w-full resize-none bg-[rgb(255,255,255,0.2)]"
-        defaultValue=""
-        {...register("content")}
-      />
-      {errors.content && (
-        <span className="text-red-400 font-bold">
-          This field needs to be at least 2 chars long...
-        </span>
-      )}
+      <label>Content</label>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ForwardRefEditor
+          ref={editorRef}
+          markdown={markdown}
+          className="bg-white rounded-md min-h-48 p-4"
+          onChange={(m) => {
+            setMarkdown(m);
+          }}
+        />
+      </Suspense>
       <button
         type="submit"
         className="mt-4 px-4 py-2 bg-teal-600 hover:bg-teal-800 rounded-md"

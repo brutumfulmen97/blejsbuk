@@ -1,12 +1,13 @@
 "use client";
 
-import { FC } from "react";
+import { FC, Suspense, useRef } from "react";
 import { Edit, Loader2, Trash } from "lucide-react";
 import { trpc } from "~/app/_trpc/client";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
+import { ForwardRefROEditor } from "./Editor/ForwardRefROEditor";
 interface PostProps {
   post: {
     id: string;
@@ -21,6 +22,7 @@ interface PostProps {
 
 const Post: FC<PostProps> = ({ post }) => {
   const router = useRouter();
+  const editorRef = useRef(null);
 
   const mutation = trpc.deletePost.useMutation({
     onMutate: () => {
@@ -72,7 +74,13 @@ const Post: FC<PostProps> = ({ post }) => {
       >
         {post.title}
       </Link>
-      <p>{post.content}</p>
+      <Suspense fallback={<p>Loading...</p>}>
+        <ForwardRefROEditor
+          markdown={post.content}
+          className="pointer-events-none light-editor"
+          ref={editorRef}
+        />
+      </Suspense>
       <p className="text-end w-full">by: {post.authorName}</p>
     </div>
   );

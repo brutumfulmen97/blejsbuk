@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
+import "@mdxeditor/editor/style.css";
 import Provider from "./_trpc/Provider";
 import Navbar from "~/components/Navbar";
 
@@ -29,9 +30,7 @@ export default function RootLayout({
         <Provider>
           <div className="md:flex gap-8">
             <Navbar />
-            <main className="md:h-screen md:overflow-y-scroll w-full p-8">
-              {children}
-            </main>
+            <main className="w-full p-8">{children}</main>
           </div>
         </Provider>
       </body>
