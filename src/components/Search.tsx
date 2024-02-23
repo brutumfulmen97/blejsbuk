@@ -5,15 +5,20 @@ import { Search as SearchIcon } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 import { trpc } from "~/app/_trpc/client";
 import SearchResult, { SearchResultSkeleton } from "./SearchResult";
+import clsx from "clsx";
 
-interface SearchProps {}
+interface SearchProps {
+  className: string;
+  text?: string;
+}
 
-const Search: FC<SearchProps> = ({}) => {
+const Search: FC<SearchProps> = ({ className, text }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { data, isPending, error } =
-    trpc.getFilteredCommunities.useQuery(searchTerm);
+  const { data, isPending, error } = trpc.getFilteredCommunities.useQuery({
+    input: searchTerm,
+  });
 
   const handleSearch = useDebouncedCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +28,7 @@ const Search: FC<SearchProps> = ({}) => {
   );
 
   return (
-    <div className="relative">
+    <div className={clsx("relative", className)}>
       {isOpen && (
         <>
           <div
@@ -71,12 +76,13 @@ const Search: FC<SearchProps> = ({}) => {
         </>
       )}
       <div
-        className="p-4 bg-slate-500 hover:bg-slate-600 cursor-pointer grid place-content-center rounded-md"
+        className="md:flex md:gap-2 p-4 md:py-2 bg-slate-500 hover:bg-slate-600 cursor-pointer grid place-content-center rounded-md"
         onClick={() => {
           setIsOpen(!isOpen);
         }}
       >
         <SearchIcon size={20} />
+        {text !== "" && <p>{text}</p>}
       </div>
     </div>
   );

@@ -205,16 +205,63 @@ export const appRouter = router({
     return await prisma?.subreddit.findMany();
   }),
   getFilteredCommunities: publicProcedure
-    .input(z.string())
+    .input(
+      z.object({
+        input: z.string(),
+      })
+    )
     .query(async ({ input }) => {
-      if (input === "") return;
+      if (input.input === "") return [];
       return await prisma?.subreddit.findMany({
         where: {
           name: {
-            contains: input.toLowerCase(),
+            contains: input.input.toLowerCase(),
           },
         },
       });
+    }),
+  getPostsByCommunity: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      return await prisma?.post.findMany({
+        where: {
+          subredditId: input.id,
+        },
+        include: { Subreddit: true },
+      });
+    }),
+  editCommunityMembers: protectedProcedure
+    .input(z.object({ id: z.string(), action: z.enum(["join", "leave"]) }))
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.auth?.id) {
+        throw new TRPCError({
+          message: "You must be logged in to join a community.",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      const prevState = await prisma?.subreddit.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      await prisma?.subreddit.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          members:
+            input.action === "join"
+              ? prevState?.members
+                ? [...prevState.members, ctx.auth.id]
+                : [ctx.auth.id]
+              : prevState?.members.filter((m) => m !== ctx.auth.id),
+        },
+      });
+      return {
+        success: true,
+      };
     }),
 });
 

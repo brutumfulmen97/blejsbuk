@@ -33,14 +33,14 @@ const Navbar = async () => {
   ];
 
   return (
-    <nav className="bg-slate-900 md:h-screen md:w-[300px] flex md:flex-col md:justify-between justify-center gap-1 md:gap-8 p-1 md:p-8 items-center md:items-start">
+    <nav className="bg-slate-900 md:h-screen flex md:flex-col md:justify-between justify-center gap-1 md:gap-8 p-1 md:p-8 items-center md:items-start">
       <div className="flex md:flex-col gap-1 md:gap-8 items-center md:items-start">
         {routes.map((route) => {
           if (route.href === "/") {
             return (
               <div
                 key={route.href}
-                className="flex items-center justify-center"
+                className="flex flex-col items-center justify-center w-full"
               >
                 <NavLink href={route.href}>
                   <Home size={20} className="block md:hidden" />
@@ -48,10 +48,14 @@ const Navbar = async () => {
                     src="/logo.png"
                     width={100}
                     height={100}
-                    className="hidden md:block"
+                    className="hidden md:block mx-auto"
                     alt="blejsbuk logo"
                   />
                 </NavLink>
+                <Search
+                  className="hidden md:block mt-4 w-full"
+                  text={"Search..."}
+                />
               </div>
             );
           }
@@ -85,7 +89,7 @@ const Navbar = async () => {
           <RegisterLink className="hover:underline">Register</RegisterLink>
         </div>
       ) : (
-        <div className="flex justify-center">
+        <div className="flex gap-2 justify-center">
           <div className="group cursor-pointer relative w-[fit-content] rounded-md md:rounded-full p-4 md:bg-slate-600 bg-zinc-600 hover:bg-slate-500">
             <User size={20} />
             <div className="scale-0 group-hover:scale-100 flex flex-col gap-4 w-[150px] rounded-md p-4 bg-[rgb(71,85,105,0.5)] absolute md:bottom-8 md:left-8 left-8 top:8 z-20 transition-all duration-300 ease-in origin-top-left md:origin-bottom-left">
@@ -97,7 +101,7 @@ const Navbar = async () => {
           </div>
         </div>
       )}
-      <Search />
+      <Search className="md:hidden" />
     </nav>
   );
 };
