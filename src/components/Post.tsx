@@ -1,7 +1,7 @@
 "use client";
 
-import { FC, Suspense, useRef, useState } from "react";
-import { Edit, Loader2, Trash } from "lucide-react";
+import { FC, Suspense, useRef } from "react";
+import { Edit, Loader2, MessageCircleMore, Trash } from "lucide-react";
 import { trpc } from "~/app/_trpc/client";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useRouter } from "next/navigation";
@@ -9,7 +9,9 @@ import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { ForwardRefROEditor } from "./Editor/ForwardRefROEditor";
 import clsx from "clsx";
-import Comment from "./Comment";
+import CommentForm from "./Comment";
+import Comment from "./CommentView";
+import { Button } from "~/components/ui/moving-border";
 interface PostProps {
   mainPage?: boolean;
   post: {
@@ -30,10 +32,11 @@ interface PostProps {
 const Post: FC<PostProps> = ({ post, mainPage = false }) => {
   const router = useRouter();
   const editorRef = useRef(null);
+  const comments = trpc.getCommentsByPost.useQuery({ id: post.id });
 
   const mutation = trpc.deletePost.useMutation({
     onMutate: () => {
-      router.refresh();
+      router.push(`/post/${post.id}`);
     },
     onError: (error) => {
       console.error(error);
@@ -108,7 +111,20 @@ const Post: FC<PostProps> = ({ post, mainPage = false }) => {
           )}
         </div>
       </Suspense>
-      {user && <Comment postId={post.id} />}
+      {mainPage && (
+        <Button onClick={() => router.push(`/post/${post.id}`)}>
+          <p className="text-zinc-200 mr-2">Comment</p>
+          <MessageCircleMore size={20} />
+        </Button>
+      )}
+      {!mainPage && (
+        <div className="flex flex-col gap-4">
+          {comments.data?.map((comment) => (
+            <Comment key={comment.id} comment={comment} />
+          ))}
+        </div>
+      )}
+      {user && !mainPage && <CommentForm postId={post.id} />}
     </div>
   );
 };

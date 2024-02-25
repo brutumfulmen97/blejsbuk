@@ -262,6 +262,15 @@ export const appRouter = router({
         success: true,
       };
     }),
+  getCommentsByPost: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      return await prisma?.comment.findMany({
+        where: {
+          postId: input.id,
+        },
+      });
+    }),
   editCommunityMembers: protectedProcedure
     .input(z.object({ id: z.string(), action: z.enum(["join", "leave"]) }))
     .mutation(async ({ ctx, input }) => {
