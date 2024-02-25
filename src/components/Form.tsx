@@ -78,7 +78,7 @@ const Form = ({
         <ForwardRefEditor
           ref={editorRef}
           markdown={markdown}
-          className="bg-white rounded-md min-h-48 p-4"
+          className="bg-white rounded-md min-h-80 p-4"
           onChange={(m) => {
             setMarkdown(m);
           }}

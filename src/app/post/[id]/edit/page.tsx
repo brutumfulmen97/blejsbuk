@@ -20,7 +20,7 @@ const page: FC<pageProps> = async ({ params }) => {
   }
 
   return (
-    <div className="w-full h-screen grid place-content-center">
+    <div className="w-full h-screen flex justify-center items-center px-8 md:px-0">
       <PostEditForm post={post} />
     </div>
   );

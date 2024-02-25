@@ -21,16 +21,20 @@ const page = async ({}) => {
   }
 
   return (
-    <div>
-      <ProfileCard user={user} />
+    <div className="mt-20 md:mt-0">
+      <div className="px-8 md:px-0">
+        <ProfileCard user={user} />
+      </div>
       <BackgroundGradientAnimation>
         <h2 className="text-3xl z-20 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           Here are your posts...
         </h2>
       </BackgroundGradientAnimation>
-      {posts.map((post) => (
-        <Post key={post.id} post={post} />
-      ))}
+      <div className="px-8 md:px-0 flex flex-col gap-8">
+        {posts.map((post) => (
+          <Post key={post.id} post={post} />
+        ))}
+      </div>
     </div>
   );
 };

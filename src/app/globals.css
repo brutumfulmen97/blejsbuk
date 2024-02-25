@@ -72,7 +72,7 @@ body {
 
 .light-editor ul li span,
 .light-editor p span {
-  color: #fff !important;
+  color: #fff;
   --current: #fff;
   --baseTextContrast: #fff;
 }
@@ -87,4 +87,15 @@ body {
 
 .light-editor ul li[role="checkbox"]::marker {
   color: transparent;
+}
+
+.light-editor ul li code span {
+  color: #000;
+}
+
+[role="toolbar"] {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }

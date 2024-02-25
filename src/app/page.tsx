@@ -2,8 +2,6 @@ import { Suspense } from "react";
 import Form from "~/components/Form";
 import PostList from "~/components/PostList";
 import { PostsSkeleton } from "~/components/PostSkeleton";
-import { GoogleGeminiEffectDemo } from "~/components/ui/GoogleGemini";
-import { GoogleGeminiEffect } from "~/components/ui/google-gemini-effect";
 import { WavyBackground } from "~/components/ui/wavy-background";
 
 export const dynamic = "force-dynamic";
@@ -22,7 +20,13 @@ export default async function Home() {
         </p>
       </WavyBackground>
       {/* <Form orientation={"landscape"} /> */}
-      <Suspense fallback={<PostsSkeleton />}>
+      <Suspense
+        fallback={
+          <div className="px-8">
+            <PostsSkeleton />
+          </div>
+        }
+      >
         <PostList />
       </Suspense>
     </>

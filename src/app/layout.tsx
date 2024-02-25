@@ -29,11 +29,9 @@ export default function RootLayout({
       </head>
       <body className={roboto.className}>
         <Provider>
-          <div className="md:flex gap-20">
+          <div className="md:flex gap-8">
             <Navbar />
-            <TracingBeam className="max-w-7xl">
-              <main className="md:p-8 py-8">{children}</main>
-            </TracingBeam>
+            <main className="md:p-8 py-20 w-full">{children}</main>
           </div>
         </Provider>
       </body>
