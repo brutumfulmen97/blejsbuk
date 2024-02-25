@@ -52,7 +52,7 @@ const page: FC<Props> = async ({ params }) => {
         subreddit.members.includes(user.id) && (
           <PostToCommunity communityId={subreddit.id} />
         )}
-      <div className="mt-8">
+      <div className="mt-8 px-8 flex flex-col md:px-8 gap-8 pb-16">
         {posts.map((post) => (
           <Post key={post.id} post={post} />
         ))}

@@ -30,7 +30,7 @@ export function GoogleGeminiEffectDemo() {
           pathLengthFifth,
         ]}
         title="Blejsbuk"
-        description="Social network for devs"
+        description="Social network for devs, by devs"
       />
     </div>
   );

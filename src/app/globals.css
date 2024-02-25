@@ -58,13 +58,6 @@ body {
   background: transparent;
 }
 
-.light-editor {
-  --accentText: #f2f2f2;
-  --baseText: #fff;
-  --baseTextContrast: #fff;
-  --baseBg: #343442;
-}
-
 [class^="_contentEditable"] ul li {
   list-style: circle !important;
 }
@@ -75,4 +68,23 @@ body {
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.light-editor ul li span,
+.light-editor p span {
+  color: #fff !important;
+  --current: #fff;
+  --baseTextContrast: #fff;
+}
+
+.light-editor ul li {
+  list-style: circle;
+}
+
+.light-editor ul li::marker {
+  color: #fff;
+}
+
+.light-editor ul li[role="checkbox"]::marker {
+  color: transparent;
 }

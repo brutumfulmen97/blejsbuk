@@ -7,7 +7,7 @@ import {
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import Image from "next/image";
 import Link from "next/link";
-import { CircleFadingPlus, Edit2, Home, User } from "lucide-react";
+import { CircleFadingPlus, Edit2, Home, Info, User } from "lucide-react";
 import Search from "./Search";
 import { FloatingNav } from "./ui/floating-navbar";
 
@@ -19,6 +19,11 @@ const Navbar = async () => {
     {
       href: "/",
       text: "Home",
+      protected: false,
+    },
+    {
+      href: "/about-us",
+      text: "About us",
       protected: false,
     },
     {
@@ -35,7 +40,7 @@ const Navbar = async () => {
 
   return (
     <>
-      <nav className="bg-slate-950 w-[350px] hidden md:flex md:min-h-screen flex-col md:justify-between justify-center gap-1 md:gap-8 p-1 md:p-8 items-center md:items-start">
+      <nav className="bg-slate-950 w-[440px] hidden md:flex md:min-h-screen flex-col md:justify-between justify-center gap-1 md:gap-8 p-1 md:p-8 items-center md:items-start">
         <div className="bg-slate-950 flex flex-col justify-between fixed inset-0 right-auto gap-8 p-8 items-start">
           <div className="flex md:flex-col gap-1 md:gap-8 items-center md:items-start">
             {routes.map((route) => {
@@ -71,6 +76,8 @@ const Navbar = async () => {
                   >
                     {route.href === "/create" ? (
                       <Edit2 size={20} />
+                    ) : route.href === "/about-us" ? (
+                      <Info size={20} />
                     ) : (
                       <CircleFadingPlus size={20} />
                     )}
@@ -139,6 +146,8 @@ const Navbar = async () => {
                   >
                     {route.href === "/create" ? (
                       <Edit2 size={20} />
+                    ) : route.href === "/about-us" ? (
+                      <Info size={20} />
                     ) : (
                       <CircleFadingPlus size={20} />
                     )}

@@ -1,5 +1,5 @@
 "use client";
-import type { ForwardedRef } from "react";
+import { useEffect, type ForwardedRef } from "react";
 import {
   headingsPlugin,
   listsPlugin,
@@ -17,7 +17,7 @@ export default function InitializedEditor({
 }: { editorRef: ForwardedRef<MDXEditorMethods> | null } & MDXEditorProps) {
   return (
     <MDXEditor
-      className="light-editor"
+      className="light-editor bg-slate-300"
       plugins={[
         headingsPlugin(),
         listsPlugin(),

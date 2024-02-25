@@ -9,7 +9,7 @@ export default async function PostList() {
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-8 px-8 md:px-0 pb-16">
       {posts.map((post) => (
         <Post key={post.id} post={post} />
       ))}

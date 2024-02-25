@@ -74,5 +74,8 @@ function addVariablesForColors({ addBase, theme }: any) {
 
   addBase({
     ":root": newVars,
+    ".light-editor": {
+      color: "#fff",
+    },
   });
 }

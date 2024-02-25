@@ -32,7 +32,7 @@ export default function RootLayout({
           <div className="md:flex gap-20">
             <Navbar />
             <TracingBeam className="max-w-7xl">
-              <main className="p-8">{children}</main>
+              <main className="md:p-8 py-8">{children}</main>
             </TracingBeam>
           </div>
         </Provider>
