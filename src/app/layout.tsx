@@ -4,6 +4,7 @@ import "./globals.css";
 import "@mdxeditor/editor/style.css";
 import Provider from "./_trpc/Provider";
 import Navbar from "~/components/Navbar";
+import { TracingBeam } from "~/components/ui/tracing-beam";
 
 const roboto = Roboto({
   fallback: ["system-ui", "sans-serif"],
@@ -28,9 +29,11 @@ export default function RootLayout({
       </head>
       <body className={roboto.className}>
         <Provider>
-          <div className="md:flex gap-8">
+          <div className="md:flex gap-20">
             <Navbar />
-            <main className="w-full p-8">{children}</main>
+            <TracingBeam className="max-w-7xl">
+              <main className="p-8">{children}</main>
+            </TracingBeam>
           </div>
         </Provider>
       </body>

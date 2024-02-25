@@ -72,3 +72,7 @@ body {
 [class^="_contentEditable"] ol li {
   list-style: decimal !important;
 }
+
+.overflow-hidden {
+  overflow: hidden;
+}

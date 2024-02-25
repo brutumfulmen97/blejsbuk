@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { serverClient } from "../_trpc/serverClient";
 import Post from "~/components/Post";
 import ProfileCard from "~/components/ProfileCard";
+import { BackgroundGradientAnimation } from "~/components/ui/background-gradient";
 
 const page = async ({}) => {
   const { getUser } = await getKindeServerSession();
@@ -22,7 +23,11 @@ const page = async ({}) => {
   return (
     <div>
       <ProfileCard user={user} />
-      <h2 className="text-lg mb-4">Here are your posts...</h2>
+      <BackgroundGradientAnimation>
+        <h2 className="text-3xl z-20 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          Here are your posts...
+        </h2>
+      </BackgroundGradientAnimation>
       {posts.map((post) => (
         <Post key={post.id} post={post} />
       ))}

@@ -4,6 +4,7 @@ import { serverClient } from "~/app/_trpc/serverClient";
 import JoinButton from "~/components/JoinButton";
 import Post from "~/components/Post";
 import PostToCommunity from "~/components/PostToCommunity";
+import { WavyBackground } from "~/components/ui/wavy-background";
 
 interface Props {
   params: {
@@ -28,14 +29,16 @@ const page: FC<Props> = async ({ params }) => {
   }
 
   return (
-    <div>
-      <div className="flex flex-wrap gap-2 justify-between items-end">
-        <div>
-          <h1 className="text-2xl text-zinc-200 font-bold">
+    <div className="w-full overflow-clip">
+      <div className="flex flex-wrap gap-2 justify-between">
+        <WavyBackground>
+          <h1 className="text-4xl text-center text-zinc-200 font-bold w-full">
             Welocome to r/{subreddit.name}
           </h1>
-          <p className="mt-2 text-zinc-300">{subreddit.description}</p>
-        </div>
+          <p className="mt-2 text-zinc-300 text-2xl text-center w-full">
+            {subreddit.description}
+          </p>
+        </WavyBackground>
         {user && (
           <JoinButton
             userId={user.id}

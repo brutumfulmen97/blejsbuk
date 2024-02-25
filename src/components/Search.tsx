@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { Search as SearchIcon } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 import { trpc } from "~/app/_trpc/client";
@@ -27,17 +27,30 @@ const Search: FC<SearchProps> = ({ className, text }) => {
     300
   );
 
+  useEffect(() => {
+    const body = document.querySelector("body");
+    if (isOpen) {
+      body?.classList.add("overflow-hidden");
+    } else {
+      body?.classList.remove("overflow-hidden");
+    }
+
+    return () => {
+      body?.classList.remove("overflow-hidden");
+    };
+  }, [isOpen]);
+
   return (
     <div className={clsx("relative", className)}>
       {isOpen && (
         <>
           <div
-            className="fixed top-0 left-0 w-full h-screen z-10 bg-slate-700 opacity-35 backdrop-blur-md"
+            className="fixed top-0 left-0 w-full h-screen z-[999] bg-slate-700 opacity-55 backdrop-blur-sm"
             onClick={() => {
               setIsOpen(false);
             }}
           />
-          <div className="z-20 w-[60vw] min-h-24 fixed top-24 left-1/2 -translate-x-1/2 bg-gray-700 rounded-md flex flex-col justify-start items-center p-4">
+          <div className="z-[5000] w-[80vw] max-w-[600px] min-h-24 fixed top-24 left-1/2 -translate-x-1/2 bg-gray-700 rounded-md flex flex-col justify-start items-center p-4">
             <input
               autoFocus
               type="serach"
