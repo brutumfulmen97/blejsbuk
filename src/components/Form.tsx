@@ -79,7 +79,7 @@ const Form = ({
         </span>
       )}
       <label>Content</label>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div />}>
         <ForwardRefEditor
           ref={editorRef}
           markdown={markdown}

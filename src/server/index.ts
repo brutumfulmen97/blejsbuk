@@ -304,6 +304,53 @@ export const appRouter = router({
         success: true,
       };
     }),
+  getLikesForPost: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      return await prisma?.like.findMany({
+        where: {
+          postId: input.id,
+        },
+      });
+    }),
+  likePost: protectedProcedure
+    .input(z.object({ postId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.auth?.id) {
+        throw new TRPCError({
+          message: "You must be logged in to like a post.",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      const like = await prisma?.like.findFirst({
+        where: {
+          postId: input.postId,
+          authorId: ctx.auth.id,
+          authorName: ctx.auth.given_name + " " + ctx.auth.family_name,
+        },
+      });
+
+      if (like) {
+        await prisma?.like.delete({
+          where: {
+            id: like.id,
+          },
+        });
+      } else {
+        await prisma?.like.create({
+          data: {
+            postId: input.postId,
+            authorId: ctx.auth.id,
+            authorName: ctx.auth.given_name + " " + ctx.auth.family_name,
+          },
+        });
+      }
+
+      return {
+        success: true,
+      };
+    }),
 });
 
 export type AppRouter = typeof appRouter;

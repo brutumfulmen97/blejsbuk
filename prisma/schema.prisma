@@ -19,6 +19,7 @@ model Post {
   subredditId String
   Subreddit   Subreddit @relation(fields: [subredditId], references: [id])
   Comment     Comment[]
+  Likes       Like[]
 }
 
 model Subreddit {
@@ -41,4 +42,12 @@ model Comment {
   authorName String
   postId     String
   Post       Post     @relation(fields: [postId], references: [id])
+}
+
+model Like {
+  id         String @id @default(uuid())
+  postId     String
+  authorId   String
+  authorName String
+  Post       Post   @relation(fields: [postId], references: [id])
 }

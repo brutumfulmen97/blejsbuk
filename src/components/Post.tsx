@@ -12,6 +12,7 @@ import clsx from "clsx";
 import CommentForm from "./Comment";
 import Comment from "./CommentView";
 import { Button } from "~/components/ui/moving-border";
+import Like from "./Like";
 interface PostProps {
   mainPage?: boolean;
   post: {
@@ -112,10 +113,16 @@ const Post: FC<PostProps> = ({ post, mainPage = false }) => {
         </div>
       </Suspense>
       {mainPage && (
-        <Button onClick={() => router.push(`/post/${post.id}`)}>
-          <p className="text-zinc-200 mr-2">Comment</p>
-          <MessageCircleMore size={20} />
-        </Button>
+        <div className="flex gap-4 flex-wrap">
+          <Button
+            onClick={() => router.push(`/post/${post.id}`)}
+            className="hover:opacity-75 transition-opacity duration-150 ease-in"
+          >
+            <p className="text-zinc-200 mr-2">Comment</p>
+            <MessageCircleMore size={20} />
+          </Button>
+          <Like postId={post.id} />
+        </div>
       )}
       {!mainPage && (
         <div className="flex flex-col gap-4">
@@ -124,6 +131,7 @@ const Post: FC<PostProps> = ({ post, mainPage = false }) => {
           ))}
         </div>
       )}
+      {!mainPage && <Like postId={post.id} />}
       {user && !mainPage && <CommentForm postId={post.id} />}
     </div>
   );
