@@ -27,6 +27,12 @@ interface PostProps {
       name: string;
       id: string;
     };
+    Likes: {
+      id: string;
+      postId: string;
+      authorId: string;
+      authorName: string;
+    }[];
   };
 }
 
@@ -121,7 +127,7 @@ const Post: FC<PostProps> = ({ post, mainPage = false }) => {
             <p className="text-zinc-200 mr-2">Comment</p>
             <MessageCircleMore size={20} />
           </Button>
-          <Like postId={post.id} />
+          <Like post={post} />
         </div>
       )}
       {!mainPage && (
@@ -131,7 +137,7 @@ const Post: FC<PostProps> = ({ post, mainPage = false }) => {
           ))}
         </div>
       )}
-      {!mainPage && <Like postId={post.id} />}
+      {!mainPage && <Like post={post} />}
       {user && !mainPage && <CommentForm postId={post.id} />}
     </div>
   );

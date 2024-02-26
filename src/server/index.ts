@@ -7,7 +7,7 @@ export const appRouter = router({
   getPosts: publicProcedure.query(async () => {
     return await prisma?.post.findMany({
       orderBy: { createdAt: "desc" },
-      include: { Subreddit: true },
+      include: { Subreddit: true, Likes: true },
     });
   }),
   getPostById: publicProcedure
@@ -21,7 +21,7 @@ export const appRouter = router({
         where: {
           id: input.id,
         },
-        include: { Subreddit: true },
+        include: { Subreddit: true, Likes: true },
       });
     }),
   getPostsByUser: publicProcedure
@@ -37,7 +37,7 @@ export const appRouter = router({
         where: {
           authorId: input?.id,
         },
-        include: { Subreddit: true },
+        include: { Subreddit: true, Likes: true },
         orderBy: { createdAt: "desc" },
       });
     }),
@@ -228,7 +228,7 @@ export const appRouter = router({
         where: {
           subredditId: input.id,
         },
-        include: { Subreddit: true },
+        include: { Subreddit: true, Likes: true },
         orderBy: { createdAt: "desc" },
       });
     }),
