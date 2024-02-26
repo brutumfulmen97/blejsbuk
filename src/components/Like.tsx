@@ -1,5 +1,5 @@
 import { Heart } from "lucide-react";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { Button } from "./ui/moving-border";
 import { trpc } from "~/app/_trpc/client";
 import toast from "react-hot-toast";
@@ -20,19 +20,15 @@ interface LikeProps {
 const Like: FC<LikeProps> = ({ post }) => {
   const { user } = useKindeBrowserClient();
   const router = useRouter();
-  const userInLikes = post?.Likes.find((like) => like.authorId === user?.id);
-  const [isLikedBool, setIsLikedBool] = useState(!!userInLikes);
+  let isLiked = post?.Likes.find((like) => like.authorId === user?.id);
 
   const mutation = trpc.likePost.useMutation({
     onSettled: () => {
-      toast.success(!userInLikes ? "Liked post" : "Unliked post");
+      toast.success(!isLiked ? "Liked post" : "Unliked post");
       router.refresh();
     },
     onError: (err) => {
       toast.error(err.message);
-    },
-    onMutate: () => {
-      setIsLikedBool((prev) => !prev);
     },
   });
 
@@ -44,8 +40,10 @@ const Like: FC<LikeProps> = ({ post }) => {
           mutation.mutate({ postId: post.id });
         }}
       >
-        <p className="text-zinc-200 mr-2">{isLikedBool ? "Liked" : "Like"}</p>
-        <Heart size={20} color={isLikedBool ? "red" : "white"} />
+        <p className="text-zinc-200 mr-2">
+          {mutation.isPending ? "Processing..." : isLiked ? "Liked" : "Like"}
+        </p>
+        <Heart size={20} color={isLiked ? "red" : "white"} />
       </Button>
       {post && post?.Likes?.length > 0 && (
         <>
