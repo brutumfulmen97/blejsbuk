@@ -31,6 +31,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
+    "react-hot-toast": "^2.4.1",
     "simplex-noise": "^4.0.1",
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.2.1",

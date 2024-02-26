@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 import { trpc } from "~/app/_trpc/client";
 
@@ -32,7 +33,7 @@ function CreateCommunityForm() {
   const mutation = trpc.createSubreddit.useMutation({
     onSettled: () => {
       router.push("/");
-      router.refresh();
+      toast.success("Community created!");
     },
   });
 
@@ -47,12 +48,20 @@ function CreateCommunityForm() {
         placeholder="name"
         className="text-black p-2 rounded-md w-full"
       />
+      {errors.name && (
+        <p className="text-sm text-red-400 my-2">{errors.name.message}</p>
+      )}
       <textarea
         rows={5}
         {...register("description")}
         placeholder="description"
         className="text-black p-2 rounded-md w-full"
       />
+      {errors.description && (
+        <p className="text-sm text-red-400 my-2">
+          {errors.description.message}
+        </p>
+      )}
       <button
         type="submit"
         className="rounded-md py-2 px-4 bg-teal-600 hover:bg-teal-800"

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { Suspense, useRef, useState } from "react";
 import { ForwardRefEditor } from "./Editor/ForwardRefEditor";
+import toast from "react-hot-toast";
 
 type Inputs = {
   title: string;
@@ -42,15 +43,19 @@ const Form = ({
 
   const mutation = trpc.submitPost.useMutation({
     onSettled: () => {
+      toast.success("Post submitted!");
       router.push("/");
       router.refresh();
+    },
+    onError: (err) => {
+      toast.error(err.message);
     },
   });
 
   return (
     <form
       className={clsx(
-        "mb-12 p-8 items-center rounded-md bg-slate-800 text-white outline outline-slate-500",
+        "mb-12 p-8 items-center rounded-md bg-slate-800 text-white outline outline-slate-500 max-w-[500px]",
         orientation === "portrait"
           ? "flex flex-col gap-4"
           : "w-full flex flex-col gap-8"

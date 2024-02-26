@@ -7,6 +7,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { trpc } from "~/app/_trpc/client";
 import { Button } from "./ui/moving-border";
+import toast from "react-hot-toast";
 
 type Inputs = {
   content: string;
@@ -31,7 +32,10 @@ function CommentForm({ postId }: { postId: string }) {
 
   const mutation = trpc.commentOnPost.useMutation({
     onSettled: async () => {
-      //TODO: Add toast
+      toast.success("Comment posted!");
+    },
+    onError: (err) => {
+      toast.error(err.message);
     },
   });
 
@@ -50,8 +54,9 @@ function CommentForm({ postId }: { postId: string }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <textarea
+        disabled={mutation.isPending}
         {...register("content")}
-        className="w-full rounded-md text-zinc-300 bg-slate-800 resize-none p-4 outline outline-slate-500"
+        className="w-full rounded-md text-zinc-300 bg-slate-800 resize-none p-4 outline outline-slate-500 disabled:opacity-50 disabled:cursor-not-allowed"
         placeholder="Comment..."
         rows={4}
       />

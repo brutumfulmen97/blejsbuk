@@ -7,6 +7,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { trpc } from "~/app/_trpc/client";
 import { ForwardRefEditor } from "./Editor/ForwardRefEditor";
+import toast from "react-hot-toast";
 
 type Inputs = {
   title: string;
@@ -35,6 +36,7 @@ const PostEditForm: FC<PostEditFormProps> = ({ post }) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
@@ -46,8 +48,13 @@ const PostEditForm: FC<PostEditFormProps> = ({ post }) => {
 
   const mutation = trpc.editPost.useMutation({
     onSettled: () => {
+      reset();
+      toast.success("Post edited!");
       router.push("/");
       router.refresh();
+    },
+    onError: (err) => {
+      toast.error(err.message);
     },
   });
 

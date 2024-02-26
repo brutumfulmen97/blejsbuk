@@ -35,8 +35,8 @@ const Post: FC<PostProps> = ({ post, mainPage = false }) => {
   const comments = trpc.getCommentsByPost.useQuery({ id: post.id });
 
   const mutation = trpc.deletePost.useMutation({
-    onMutate: () => {
-      router.push(`/post/${post.id}`);
+    onSettled: () => {
+      router.refresh();
     },
     onError: (error) => {
       console.error(error);

@@ -4,14 +4,18 @@ const shimmer =
 export function PostSkeleton() {
   return (
     <div
-      className={`${shimmer} relative overflow-hidden rounded-xl bg-slate-800 p-2 shadow-sm mb-8`}
+      className={`${shimmer} relative overflow-hidden rounded-xl bg-slate-900 p-2 shadow-sm mb-8`}
     >
       <div className="flex p-4">
-        <div className="h-5 w-5 rounded-md bg-slate-600" />
-        <div className="ml-2 h-6 w-16 rounded-md bg-slate-600 text-sm font-medium" />
+        <div className="h-12 w-5 rounded-md bg-slate-800" />
+        <div className="ml-2 h-12 w-16 rounded-md bg-slate-600 text-sm font-medium" />
       </div>
-      <div className="flex items-center justify-center truncate rounded-xl bg-slate-500 px-4 py-8">
-        <div className="h-7 w-20 rounded-md bg-slate-600" />
+      <div className="flex items-center justify-center truncate rounded-xl bg-slate-700 px-4 py-8">
+        <div className="h-12 w-20 rounded-md bg-slate-700" />
+      </div>
+      <div className="flex gap-4 mt-4 items-center justify-center truncate rounded-xl bg-slate-700 px-4 py-8">
+        <div className="h-12 w-12 rounded-md bg-slate-700" />
+        <div className="h-12 w-12 rounded-md bg-slate-700" />
       </div>
     </div>
   );

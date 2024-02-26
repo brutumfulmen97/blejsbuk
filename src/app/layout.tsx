@@ -4,6 +4,7 @@ import "./globals.css";
 import "@mdxeditor/editor/style.css";
 import Provider from "./_trpc/Provider";
 import Navbar from "~/components/Navbar";
+import { Toaster } from "react-hot-toast";
 
 const roboto = Roboto({
   fallback: ["system-ui", "sans-serif"],
@@ -27,6 +28,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.png" sizes="any" />
       </head>
       <body className={roboto.className}>
+        <Toaster position="top-right" />
         <Provider>
           <div className="md:flex">
             <Navbar />

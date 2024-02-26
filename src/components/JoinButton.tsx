@@ -3,6 +3,7 @@
 import { Loader2, Plus, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
+import toast from "react-hot-toast";
 import { trpc } from "~/app/_trpc/client";
 
 interface JoinButtonProps {
@@ -16,7 +17,11 @@ const JoinButton: FC<JoinButtonProps> = ({ userId, communityId, members }) => {
 
   const mutation = trpc.editCommunityMembers.useMutation({
     onSettled: () => {
+      toast.success("Community joined!");
       router.refresh();
+    },
+    onError: (err) => {
+      toast.error(err.message);
     },
   });
 

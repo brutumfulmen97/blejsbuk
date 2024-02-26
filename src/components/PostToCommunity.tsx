@@ -27,6 +27,7 @@ function PostToCommunity({ communityId }: { communityId: string }) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
@@ -41,9 +42,10 @@ function PostToCommunity({ communityId }: { communityId: string }) {
 
   const mutation = trpc.submitPost.useMutation({
     onSettled: () => {
+      reset();
+      setMarkdown("");
       router.refresh();
       setIsHidden(true);
-      setMarkdown("");
     },
   });
 

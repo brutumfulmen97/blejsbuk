@@ -70,6 +70,10 @@ body {
   overflow: hidden;
 }
 
+.light-editor {
+  --baseTextContrast: #fff;
+}
+
 .light-editor ul li span,
 .light-editor p span {
   color: #fff;
@@ -89,7 +93,12 @@ body {
   color: transparent;
 }
 
-.light-editor ul li code span {
+.light-editor strong,
+.light-editor p {
+  color: #fff;
+}
+
+.light-editor code span {
   color: #000;
 }
 
