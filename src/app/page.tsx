@@ -22,7 +22,7 @@ export default async function Home() {
       {/* <Form orientation={"landscape"} /> */}
       <Suspense
         fallback={
-          <div className="px-8">
+          <div className="px-8 md:px-0">
             <PostsSkeleton />
           </div>
         }

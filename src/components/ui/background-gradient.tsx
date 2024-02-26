@@ -15,7 +15,6 @@ export const BackgroundGradientAnimation = ({
   blendingValue = "hard-light",
   children,
   className,
-  interactive = false,
   containerClassName,
 }: {
   gradientBackgroundStart?: string;

@@ -40,8 +40,8 @@ const Navbar = async () => {
 
   return (
     <>
-      <div className="h-screen w-[365px]" />
-      <nav className="bg-slate-950 hidden fixed left-0 top-0 bottom-0 md:flex md:min-h-screen flex-col md:justify-between justify-center gap-1 md:gap-8 p-1 md:p-8 items-center md:items-start">
+      <div className="hidden md:block h-screen w-[365px]" />
+      <nav className="bg-slate-950 hidden fixed z-[5000] left-0 top-0 bottom-0 md:flex md:min-h-screen flex-col md:justify-between justify-center gap-1 md:gap-8 p-1 md:p-8 items-center md:items-start">
         <div className="flex md:flex-col gap-1 md:gap-8 items-center md:items-start">
           {routes.map((route) => {
             if (route.href === "/") {
@@ -51,7 +51,7 @@ const Navbar = async () => {
                   className="flex flex-col items-center justify-center w-full"
                 >
                   <NavLink href={route.href}>
-                    <Home size={20} className="block md:hidden" />
+                    <Home size={16} className="block md:hidden" />
                     <Image
                       src="/logo.png"
                       width={100}
@@ -72,14 +72,14 @@ const Navbar = async () => {
               <div key={route.href} className="md:w-full">
                 <NavLink
                   href={route.href}
-                  className="md:hidden p-4 rounded-md  hover:bg-slate-500 block "
+                  className="md:hidden p-3 rounded-md  hover:bg-slate-500 block "
                 >
                   {route.href === "/create" ? (
-                    <Edit2 size={20} />
+                    <Edit2 size={16} />
                   ) : route.href === "/about-us" ? (
-                    <Info size={20} />
+                    <Info size={16} />
                   ) : (
-                    <CircleFadingPlus size={20} />
+                    <CircleFadingPlus size={16} />
                   )}
                 </NavLink>
                 <NavLink href={route.href} className="md:block hidden w-full">
@@ -96,9 +96,9 @@ const Navbar = async () => {
           </div>
         ) : (
           <div className="flex gap-2 justify-center">
-            <div className="group cursor-pointer relative w-[fit-content] rounded-md md:rounded-full p-4 md:bg-slate-600 bg-zinc-600 hover:bg-slate-500">
-              <User size={20} />
-              <div className="scale-0 group-hover:scale-100 flex flex-col gap-4 w-[150px] rounded-md p-4 bg-[rgb(71,85,105,0.5)] absolute md:bottom-8 md:left-8 left-8 top:8 z-20 transition-all duration-300 ease-in origin-top-left md:origin-bottom-left">
+            <div className="group cursor-pointer relative w-[fit-content] rounded-md md:rounded-full p-3 md:bg-slate-600 bg-zinc-600 hover:bg-slate-500">
+              <User size={16} />
+              <div className="scale-0 group-hover:scale-100 flex flex-col gap-4 w-[150px] rounded-md p-3 bg-[rgb(71,85,105,0.5)] absolute md:bottom-8 md:left-8 left-8 top:8 z-20 transition-all duration-300 ease-in origin-top-left md:origin-bottom-left">
                 <Link href="/profile" className="hover:underline">
                   Go to profile
                 </Link>
@@ -120,7 +120,7 @@ const Navbar = async () => {
                     className="flex flex-col items-center justify-center w-full"
                   >
                     <NavLink href={route.href}>
-                      <Home size={20} className="block md:hidden" />
+                      <Home size={16} className="block md:hidden" />
                       <Image
                         src="/logo.png"
                         width={100}
@@ -141,14 +141,14 @@ const Navbar = async () => {
                 <div key={route.href} className="md:w-full">
                   <NavLink
                     href={route.href}
-                    className="md:hidden p-4 rounded-md  hover:bg-slate-500 block "
+                    className="md:hidden p-3 rounded-md  hover:bg-slate-500 block "
                   >
                     {route.href === "/create" ? (
-                      <Edit2 size={20} />
+                      <Edit2 size={16} />
                     ) : route.href === "/about-us" ? (
-                      <Info size={20} />
+                      <Info size={16} />
                     ) : (
-                      <CircleFadingPlus size={20} />
+                      <CircleFadingPlus size={16} />
                     )}
                   </NavLink>
                   <NavLink href={route.href} className="md:block hidden w-full">
@@ -160,9 +160,9 @@ const Navbar = async () => {
           </div>
           {!isAuthed ? (
             <div className="flex gap-2 justify-center">
-              <div className="group cursor-pointer relative w-[fit-content] rounded-md md:rounded-full p-4 md:bg-slate-600 bg-zinc-600 hover:bg-slate-500">
+              <div className="group cursor-pointer relative w-[fit-content] rounded-md md:rounded-full p-3 md:bg-slate-600 bg-zinc-600 hover:bg-slate-500">
                 <User size={20} />
-                <div className="scale-0 group-hover:scale-100 flex flex-col gap-4 w-[150px] rounded-md p-4 bg-[rgb(71,85,105,0.5)] absolute md:bottom-8 md:left-8 right-8 top:8 z-20 transition-all duration-300 ease-in origin-top-right md:origin-bottom-left">
+                <div className="scale-0 group-hover:scale-100 flex flex-col gap-4 w-[150px] rounded-md p-3 bg-[rgb(71,85,105,0.5)] absolute md:bottom-8 md:left-8 right-8 top:8 z-20 transition-all duration-300 ease-in origin-top-right md:origin-bottom-left">
                   <LoginLink className="hover:underline">Log in</LoginLink>
                   <RegisterLink className="hover:underline">
                     Register
@@ -172,9 +172,9 @@ const Navbar = async () => {
             </div>
           ) : (
             <div className="flex gap-2 justify-center">
-              <div className="group cursor-pointer relative w-[fit-content] rounded-md md:rounded-full p-4 md:bg-slate-600 bg-zinc-600 hover:bg-slate-500">
-                <User size={20} />
-                <div className="scale-0 group-hover:scale-100 flex flex-col gap-4 w-[150px] rounded-md p-4 bg-[rgb(71,85,105,0.5)] absolute md:bottom-8 md:left-8 right-8 top:8 z-20 transition-all duration-300 ease-in origin-top-right md:origin-bottom-left">
+              <div className="group cursor-pointer relative w-[fit-content] rounded-md md:rounded-full p-3 md:bg-slate-600 bg-zinc-600 hover:bg-slate-500">
+                <User size={16} />
+                <div className="scale-0 group-hover:scale-100 flex flex-col gap-4 w-[150px] rounded-md p-3 bg-[rgb(71,85,105,0.5)] absolute md:bottom-8 md:left-8 right-8 top:8 z-20 transition-all duration-300 ease-in origin-top-right md:origin-bottom-left">
                   <Link href="/profile" className="hover:underline">
                     Go to profile
                   </Link>

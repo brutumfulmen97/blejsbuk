@@ -45,12 +45,12 @@ const Search: FC<SearchProps> = ({ className, text }) => {
       {isOpen && (
         <>
           <div
-            className="fixed top-0 left-0 w-full h-screen z-[999] bg-slate-700 opacity-55 backdrop-blur-sm"
+            className="fixed top-0 left-0 w-full h-screen z-[5000] bg-slate-700 opacity-55 backdrop-blur-sm"
             onClick={() => {
               setIsOpen(false);
             }}
           />
-          <div className="z-[5000] w-[80vw] max-w-[600px] min-h-24 fixed top-24 left-1/2 -translate-x-1/2 bg-gray-700 rounded-md flex flex-col justify-start items-center p-4">
+          <div className="z-[5000] w-[80vw] max-w-[600px] min-h-24 fixed top-24 left-1/2 md:left-[calc(50%+150px)] -translate-x-1/2 bg-gray-700 rounded-md flex flex-col justify-start items-center p-4">
             <input
               autoFocus
               type="serach"
@@ -89,12 +89,12 @@ const Search: FC<SearchProps> = ({ className, text }) => {
         </>
       )}
       <div
-        className="md:flex md:gap-2 p-4 md:py-2 bg-slate-500 hover:bg-slate-600 cursor-pointer grid place-content-center rounded-md"
+        className="md:flex items-center md:gap-2 p-3 md:py-2 bg-slate-500 hover:bg-slate-600 cursor-pointer grid place-content-center rounded-md"
         onClick={() => {
           setIsOpen(!isOpen);
         }}
       >
-        <SearchIcon size={20} />
+        <SearchIcon size={16} className="md:-mt-1" />
         {text !== "" && <p>{text}</p>}
       </div>
     </div>

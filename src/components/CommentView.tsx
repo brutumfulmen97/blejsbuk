@@ -15,11 +15,11 @@ interface CommentViewProps {
 const CommentView: FC<CommentViewProps> = ({ comment }) => {
   return (
     <div className="rounded-md border border-slate-400 p-4">
-      <p className="mb-2">{comment.content}</p>
-      <p className="text-slate-100 text-sm">
-        Posted {formatDistanceToNow(comment.createdAt)} ago
-        <span className="text-slate-300">by: {comment.authorName}</span>
+      <p className="text-slate-200 text-xs">
+        Posted {formatDistanceToNow(comment.createdAt)} ago by:
+        <span className="text-slate-400"> {comment.authorName}</span>
       </p>
+      <p className="mt-2">{comment.content}</p>
     </div>
   );
 };

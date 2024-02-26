@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { trpc } from "~/app/_trpc/client";
+import { Button } from "./ui/moving-border";
 
 type Inputs = {
   content: string;
@@ -29,8 +30,8 @@ function CommentForm({ postId }: { postId: string }) {
   });
 
   const mutation = trpc.commentOnPost.useMutation({
-    onSettled: () => {
-      router.refresh();
+    onSettled: async () => {
+      //TODO: Add toast
     },
   });
 
@@ -57,12 +58,14 @@ function CommentForm({ postId }: { postId: string }) {
       {errors.content && (
         <p className="text-sm text-red-400 my-2">{errors.content.message}</p>
       )}
-      <button
-        type="submit"
-        className="w-full rounded-md bg-teal-700 py-2 mt-2 hover:bg-teal-500 outline outline-amber-700"
-      >
-        {mutation.isPending ? "Posting..." : "Post comment"}
-      </button>
+      <div className="mt-4 flex justify-end">
+        <Button
+          type="submit"
+          className="w-full hover:opacity-75 transition-opacity duration-150 ease-in"
+        >
+          {mutation.isPending ? "Posting..." : "Post comment"}
+        </Button>
+      </div>
     </form>
   );
 }

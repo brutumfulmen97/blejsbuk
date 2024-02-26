@@ -55,7 +55,7 @@ body {
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: transparent;
+  background: #9e9e9e;
 }
 
 [class^="_contentEditable"] ul li {

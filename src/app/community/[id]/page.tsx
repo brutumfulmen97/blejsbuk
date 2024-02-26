@@ -32,10 +32,10 @@ const page: FC<Props> = async ({ params }) => {
     <div className="w-full overflow-clip">
       <div className="flex flex-wrap gap-2 justify-between">
         <WavyBackground>
-          <h1 className="text-4xl text-center text-zinc-200 font-bold w-full">
+          <h1 className="text-4xl text-center text-zinc-200 font-bold w-full  max-w-[80%] mx-auto">
             Welocome to r/{subreddit.name}
           </h1>
-          <p className="mt-2 text-zinc-300 text-2xl text-center w-full">
+          <p className="mt-2 text-zinc-300 text-2xl text-center w-full max-w-[80%] mx-auto">
             {subreddit.description}
           </p>
         </WavyBackground>
