@@ -11,6 +11,7 @@ import { ForwardRefEditor } from "./Editor/ForwardRefEditor";
 import toast from "react-hot-toast";
 import { UploadButton } from "~/utils/uploadthing";
 import Image from "next/image";
+import { XCircle } from "lucide-react";
 
 type Inputs = {
   title: string;
@@ -105,13 +106,21 @@ const Form = ({
           }}
         />
         {file && (
-          <Image
-            src={file}
-            alt="uploaded image"
-            width={200}
-            height={200}
-            className="w-full h-auto"
-          />
+          <div className="relative">
+            <XCircle
+              size={24}
+              fill="#000"
+              className="absolute top-2 right-2 z-10 hover:opacity-50 cursor-pointer"
+              onClick={() => setFile("")}
+            />
+            <Image
+              src={file}
+              alt="uploaded image"
+              width={200}
+              height={200}
+              className="w-full h-auto"
+            />
+          </div>
         )}
         <button
           type="submit"

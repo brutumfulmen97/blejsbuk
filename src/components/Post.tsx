@@ -1,5 +1,5 @@
 import { FC, Suspense } from "react";
-import { Edit, MessageCircleMore, Trash } from "lucide-react";
+import { Edit, MessageCircleMore } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { ForwardRefROEditor } from "./Editor/ForwardRefROEditor";
@@ -80,7 +80,14 @@ const Post: FC<PostProps> = async ({ post, singlePostPage = false }) => {
         {post.title}
       </Link>
       {post.imageUrl && (
-        <Image src={post.imageUrl} width={500} height={500} alt="post image" />
+        <Link href={`/post/${post.id}`}>
+          <Image
+            src={post.imageUrl}
+            width={500}
+            height={500}
+            alt="post image"
+          />
+        </Link>
       )}
       <Suspense fallback={<p>Loading...</p>}>
         <div

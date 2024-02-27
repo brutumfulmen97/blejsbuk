@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { Suspense, useRef, useState } from "react";
 import { ForwardRefEditor } from "./Editor/ForwardRefEditor";
-import { ChevronDown, Loader2 } from "lucide-react";
+import { ChevronDown, Loader2, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { UploadButton } from "~/utils/uploadthing";
 import Image from "next/image";
@@ -115,13 +115,21 @@ function PostToCommunity({ communityId }: { communityId: string }) {
           }}
         />
         {file && (
-          <Image
-            src={file}
-            alt="uploaded image"
-            width={200}
-            height={200}
-            className="w-full h-auto"
-          />
+          <div className="relative">
+            <XCircle
+              size={24}
+              fill="#000"
+              className="absolute top-2 right-2 z-10 hover:opacity-50 cursor-pointer"
+              onClick={() => setFile("")}
+            />
+            <Image
+              src={file}
+              alt="uploaded image"
+              width={200}
+              height={200}
+              className="w-full h-auto"
+            />
+          </div>
         )}
         <button
           type="submit"
