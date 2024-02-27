@@ -19,6 +19,7 @@ model Post {
   editedAt    DateTime  @default(now()) @updatedAt
   title       String
   content     String
+  imageUrl    String?
   authorId    String
   authorName  String
   subredditId String

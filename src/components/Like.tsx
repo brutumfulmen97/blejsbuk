@@ -53,7 +53,7 @@ const Like: FC<LikeProps> = ({ postId, initialVotesAmount, inititalVote }) => {
   });
 
   return (
-    <div className="absolute top-24 right-8 flex flex-col justify-center items-center gap-2">
+    <div className="absolute top-16 right-8 flex flex-col justify-center items-center gap-2">
       <button
         className="hover:opacity-75 transition-opacity duration-150 ease-in"
         onClick={() => {

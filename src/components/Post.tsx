@@ -12,6 +12,7 @@ import { VoteType } from "@prisma/client";
 import { serverClient } from "~/app/_trpc/serverClient";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import DeletePost from "./DeletePost";
+import Image from "next/image";
 interface PostProps {
   singlePostPage?: boolean;
   post: {
@@ -20,6 +21,7 @@ interface PostProps {
     content: string;
     authorId: string;
     authorName: string;
+    imageUrl: string | null;
     createdAt: Date;
     editedAt: Date;
     Subreddit: {
@@ -77,6 +79,9 @@ const Post: FC<PostProps> = async ({ post, singlePostPage = false }) => {
       >
         {post.title}
       </Link>
+      {post.imageUrl && (
+        <Image src={post.imageUrl} width={500} height={500} alt="post image" />
+      )}
       <Suspense fallback={<p>Loading...</p>}>
         <div
           className={clsx(

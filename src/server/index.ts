@@ -136,6 +136,7 @@ export const appRouter = router({
         title: z.string(),
         subredditId: z.string().optional(),
         content: z.string(),
+        imageUrl: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -154,6 +155,7 @@ export const appRouter = router({
             authorId: ctx.auth.id,
             authorName: ctx.auth.given_name + " " + ctx.auth.family_name,
             subredditId: input.subredditId ?? "general",
+            imageUrl: input.imageUrl ?? "",
           },
         });
         return {

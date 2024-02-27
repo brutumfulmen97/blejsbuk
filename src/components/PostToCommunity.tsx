@@ -10,6 +10,8 @@ import { Suspense, useRef, useState } from "react";
 import { ForwardRefEditor } from "./Editor/ForwardRefEditor";
 import { ChevronDown, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { UploadButton } from "~/utils/uploadthing";
+import Image from "next/image";
 
 type Inputs = {
   title: string;
@@ -23,6 +25,7 @@ function PostToCommunity({ communityId }: { communityId: string }) {
   const router = useRouter();
   const [markdown, setMarkdown] = useState("");
   const [isHidden, setIsHidden] = useState(true);
+  const [file, setFile] = useState("");
   const editorRef = useRef(null);
 
   const {
@@ -38,6 +41,7 @@ function PostToCommunity({ communityId }: { communityId: string }) {
       title: data.title,
       content: markdown,
       subredditId: communityId,
+      imageUrl: file ?? "",
     });
   };
 
@@ -100,6 +104,25 @@ function PostToCommunity({ communityId }: { communityId: string }) {
             }}
           />
         </Suspense>
+        <UploadButton
+          className="mt-2"
+          endpoint="imageUploader"
+          onClientUploadComplete={(res) => {
+            setFile(res[0].url);
+          }}
+          onUploadError={(err) => {
+            toast.error(err.message);
+          }}
+        />
+        {file && (
+          <Image
+            src={file}
+            alt="uploaded image"
+            width={200}
+            height={200}
+            className="w-full h-auto"
+          />
+        )}
         <button
           type="submit"
           className="flex justify-center mt-4 px-4 py-2 bg-teal-600 hover:bg-teal-800 rounded-md"
