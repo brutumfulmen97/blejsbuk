@@ -14,6 +14,7 @@ interface JoinButtonProps {
 
 const JoinButton: FC<JoinButtonProps> = ({ userId, communityId, members }) => {
   const router = useRouter();
+  if (communityId === "general") return null;
 
   const mutation = trpc.editCommunityMembers.useMutation({
     onSettled: () => {

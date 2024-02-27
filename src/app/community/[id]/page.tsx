@@ -50,11 +50,12 @@ const page: FC<Props> = async ({ params }) => {
         </div>
       </div>
       <div className="px-8 md:px-0">
-        {user &&
+        {(user &&
           subreddit.members.length > 0 &&
-          subreddit.members.includes(user.id) && (
+          subreddit.members.includes(user.id)) ||
+          (subreddit.id === "general" && (
             <PostToCommunity communityId={subreddit.id} />
-          )}
+          ))}
       </div>
       <div className="mt-8 px-8 flex flex-col md:px-0 gap-8 pb-16">
         {posts.length === 0 && (

@@ -161,7 +161,7 @@ const Navbar = async () => {
           {!isAuthed ? (
             <div className="flex gap-2 justify-center">
               <div className="group cursor-pointer relative w-[fit-content] rounded-md md:rounded-full p-3 md:bg-slate-600 bg-zinc-600 hover:bg-slate-500">
-                <User size={20} />
+                <User size={16} />
                 <div className="scale-0 group-hover:scale-100 flex flex-col gap-4 w-[150px] rounded-md p-3 bg-[rgb(71,85,105,0.5)] absolute md:bottom-8 md:left-8 right-8 top:8 z-20 transition-all duration-300 ease-in origin-top-right md:origin-bottom-left">
                   <LoginLink className="hover:underline">Log in</LoginLink>
                   <RegisterLink className="hover:underline">

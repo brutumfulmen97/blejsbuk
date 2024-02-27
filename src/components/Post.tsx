@@ -45,7 +45,7 @@ const Post: FC<PostProps> = async ({ post, mainPage = false }) => {
   return (
     <div className="relative w-full bg-zinc-900 rounded-2xl p-8 flex flex-col gap-4">
       <p className="text-sm text-slate-300">by: {post.authorName}</p>
-      <p className="text-slate-300 text-sm">
+      <p className="text-slate-300 text-sm max-w-[80%]">
         Posted {formatDistanceToNow(post.createdAt)} ago{" "}
         <Link
           href={`/community/${post.Subreddit.id}`}
@@ -73,7 +73,7 @@ const Post: FC<PostProps> = async ({ post, mainPage = false }) => {
       </div>
       <Link
         href={`/post/${post.id}`}
-        className="text-2xl text-slate-300 hover:underline"
+        className="text-2xl text-slate-300 hover:underline max-w-[80%]"
       >
         {post.title}
       </Link>
