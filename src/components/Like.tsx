@@ -24,7 +24,7 @@ const Like: FC<LikeProps> = ({ postId, initialVotesAmount, inititalVote }) => {
       router.refresh();
     },
     onSuccess: () => {
-      toast.success(true ? "Liked post" : "Unliked post");
+      toast.success("Vote posted!");
     },
     onError: (err, vote) => {
       if (vote.type === "UP") {
@@ -56,7 +56,7 @@ const Like: FC<LikeProps> = ({ postId, initialVotesAmount, inititalVote }) => {
   });
 
   return (
-    <div className="absolute bottom-8 right-8 flex flex-col justify-center items-center gap-2">
+    <div className="absolute top-24 right-8 flex flex-col justify-center items-center gap-2">
       <button
         className="hover:opacity-75 transition-opacity duration-150 ease-in"
         onClick={() => {

@@ -353,6 +353,15 @@ export const appRouter = router({
             success: true,
           };
         }
+      } else {
+        await prisma?.vote.create({
+          data: {
+            postId: input.postId,
+            authorName: ctx.auth.given_name + " " + ctx.auth.family_name,
+            authorId: ctx.auth.id,
+            type: input.type,
+          },
+        });
       }
 
       return {

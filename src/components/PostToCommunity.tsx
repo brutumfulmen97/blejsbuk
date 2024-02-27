@@ -1,4 +1,5 @@
 "use client";
+
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -8,7 +9,7 @@ import clsx from "clsx";
 import { Suspense, useRef, useState } from "react";
 import { ForwardRefEditor } from "./Editor/ForwardRefEditor";
 import { ChevronDown, Loader2 } from "lucide-react";
-import { set } from "date-fns";
+import toast from "react-hot-toast";
 
 type Inputs = {
   title: string;
@@ -40,12 +41,21 @@ function PostToCommunity({ communityId }: { communityId: string }) {
     });
   };
 
+  const utils = trpc.useUtils();
+
   const mutation = trpc.submitPost.useMutation({
     onSettled: () => {
+      router.refresh();
       reset();
       setMarkdown("");
-      router.refresh();
       setIsHidden(true);
+      utils.getPostsByCommunity.invalidate();
+    },
+    onSuccess: () => {
+      toast.success("Posted!");
+    },
+    onError: (err) => {
+      toast.error(err.message);
     },
   });
 

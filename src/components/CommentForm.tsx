@@ -32,10 +32,13 @@ function CommentForm({ postId }: { postId: string }) {
 
   const mutation = trpc.commentOnPost.useMutation({
     onSettled: async () => {
-      toast.success("Comment posted!");
+      router.refresh();
     },
     onError: (err) => {
       toast.error(err.message);
+    },
+    onSuccess: () => {
+      toast.success("Comment posted!");
     },
   });
 

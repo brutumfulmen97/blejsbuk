@@ -55,14 +55,14 @@ const Form = ({
   return (
     <form
       className={clsx(
-        "mb-12 p-8 items-center rounded-md bg-slate-800 text-white outline outline-slate-500 max-w-[500px]",
+        "mb-12 p-8 items-center rounded-md bg-slate-800 text-white outline outline-slate-500 max-w-[400px] w-[80vw]",
         orientation === "portrait"
-          ? "flex flex-col gap-4"
+          ? "flex flex-col gap-2"
           : "w-full flex flex-col gap-8"
       )}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h2 className="w-full pb-4 text-center text-3xl border-b border-slate-500">
+      <h2 className="w-full pb-4 text-center text-xl md:text-3xl border-b border-slate-500">
         What&apos;s on your mind...
       </h2>
       <label htmlFor="title">Title</label>
@@ -83,7 +83,7 @@ const Form = ({
         <ForwardRefEditor
           ref={editorRef}
           markdown={markdown}
-          className="bg-white rounded-md min-h-80 p-4"
+          className="bg-white rounded-md min-h-60 p-4"
           onChange={(m) => {
             setMarkdown(m);
           }}

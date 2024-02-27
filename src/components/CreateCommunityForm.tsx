@@ -33,6 +33,11 @@ function CreateCommunityForm() {
   const mutation = trpc.createSubreddit.useMutation({
     onSettled: () => {
       router.push("/");
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    },
+    onSuccess: () => {
       toast.success("Community created!");
     },
   });

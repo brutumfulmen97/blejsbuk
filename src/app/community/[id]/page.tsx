@@ -39,19 +39,23 @@ const page: FC<Props> = async ({ params }) => {
             {subreddit.description}
           </p>
         </WavyBackground>
-        {user && (
-          <JoinButton
-            userId={user.id}
-            communityId={subreddit.id}
-            members={subreddit.members}
-          />
-        )}
+        <div className="px-8 md:px-8">
+          {user && (
+            <JoinButton
+              userId={user.id}
+              communityId={subreddit.id}
+              members={subreddit.members}
+            />
+          )}
+        </div>
       </div>
-      {user &&
-        subreddit.members.length > 0 &&
-        subreddit.members.includes(user.id) && (
-          <PostToCommunity communityId={subreddit.id} />
-        )}
+      <div className="px-8 md:px-0">
+        {user &&
+          subreddit.members.length > 0 &&
+          subreddit.members.includes(user.id) && (
+            <PostToCommunity communityId={subreddit.id} />
+          )}
+      </div>
       <div className="mt-8 px-8 flex flex-col md:px-0 gap-8 pb-16">
         {posts.length === 0 && (
           <div className="text-center text-zinc-300 text-2xl">
