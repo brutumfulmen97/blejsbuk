@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { publicProcedure, protectedProcedure, router } from "./trpc";
+import { publicProcedure, router } from "./trpc";
 import z from "zod";
 import prisma from "~/lib/prisma";
 
@@ -41,7 +41,7 @@ export const appRouter = router({
         orderBy: { createdAt: "desc" },
       });
     }),
-  editPost: protectedProcedure
+  editPost: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -91,7 +91,7 @@ export const appRouter = router({
         success: true,
       };
     }),
-  deletePost: protectedProcedure
+  deletePost: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -130,7 +130,7 @@ export const appRouter = router({
         };
       }
     }),
-  submitPost: protectedProcedure
+  submitPost: publicProcedure
     .input(
       z.object({
         title: z.string(),
@@ -166,7 +166,7 @@ export const appRouter = router({
         };
       }
     }),
-  createSubreddit: protectedProcedure
+  createSubreddit: publicProcedure
     .input(
       z.object({
         name: z.string(),
@@ -239,7 +239,7 @@ export const appRouter = router({
         orderBy: { createdAt: "desc" },
       });
     }),
-  commentOnPost: protectedProcedure
+  commentOnPost: publicProcedure
     .input(
       z.object({
         content: z.string(),
@@ -278,10 +278,10 @@ export const appRouter = router({
         },
       });
     }),
-  editCommunityMembers: protectedProcedure
+  editCommunityMembers: publicProcedure
     .input(z.object({ id: z.string(), action: z.enum(["join", "leave"]) }))
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.auth?.id) {
+      if (!ctx.auth) {
         throw new TRPCError({
           message: "You must be logged in to join a community.",
           code: "UNAUTHORIZED",
@@ -304,7 +304,7 @@ export const appRouter = router({
               ? prevState?.members
                 ? [...prevState.members, ctx.auth.id]
                 : [ctx.auth.id]
-              : prevState?.members.filter((m) => m !== ctx.auth.id),
+              : prevState?.members.filter((m) => m !== ctx.auth?.id),
         },
       });
       return {
@@ -320,7 +320,7 @@ export const appRouter = router({
         },
       });
     }),
-  likePost: protectedProcedure
+  likePost: publicProcedure
     .input(z.object({ postId: z.string(), type: z.enum(["UP", "DOWN"]) }))
     .mutation(async ({ ctx, input }) => {
       if (!ctx.auth?.id) {
