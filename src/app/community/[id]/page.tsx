@@ -6,6 +6,9 @@ import Post from "~/components/Post";
 import PostToCommunity from "~/components/PostToCommunity";
 import { WavyBackground } from "~/components/ui/wavy-background";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface Props {
   params: {
     id: string;

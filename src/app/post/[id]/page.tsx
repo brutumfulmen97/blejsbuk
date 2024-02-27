@@ -21,7 +21,7 @@ const page: FC<pageProps> = async ({ params }) => {
 
   return (
     <div className="p-8 md:p-0">
-      <Post post={post} />
+      <Post post={post} singlePostPage={true} />
     </div>
   );
 };

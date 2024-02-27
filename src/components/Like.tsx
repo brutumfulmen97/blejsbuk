@@ -23,9 +23,6 @@ const Like: FC<LikeProps> = ({ postId, initialVotesAmount, inititalVote }) => {
     onSettled: () => {
       router.refresh();
     },
-    onSuccess: () => {
-      toast.success("Vote posted!");
-    },
     onError: (err, vote) => {
       if (vote.type === "UP") {
         setNumOfLikes(numOfLikes - 1);
@@ -64,7 +61,7 @@ const Like: FC<LikeProps> = ({ postId, initialVotesAmount, inititalVote }) => {
         }}
       >
         <ArrowBigUp
-          size={24}
+          size={20}
           fill={currentVote === "UP" ? "white" : "transparent"}
         />
       </button>
@@ -76,7 +73,7 @@ const Like: FC<LikeProps> = ({ postId, initialVotesAmount, inititalVote }) => {
         }}
       >
         <ArrowBigDown
-          size={24}
+          size={20}
           fill={currentVote === "DOWN" ? "white" : "transparent"}
         />
       </button>

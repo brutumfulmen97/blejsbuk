@@ -19,7 +19,6 @@ export default async function Home() {
           The social network for developers
         </p>
       </WavyBackground>
-      {/* <Form orientation={"landscape"} /> */}
       <Suspense
         fallback={
           <div className="px-8 md:px-0">

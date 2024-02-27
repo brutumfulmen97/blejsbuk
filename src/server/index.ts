@@ -113,15 +113,22 @@ export const appRouter = router({
         });
       }
 
-      await prisma?.post.delete({
-        where: {
-          id: input.id,
-        },
-      });
+      try {
+        await prisma?.post.delete({
+          where: {
+            id: input.id,
+          },
+        });
 
-      return {
-        success: true,
-      };
+        return {
+          success: true,
+        };
+      } catch (e) {
+        console.log(e);
+        return {
+          success: false,
+        };
+      }
     }),
   submitPost: protectedProcedure
     .input(

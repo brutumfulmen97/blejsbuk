@@ -13,7 +13,7 @@ import { serverClient } from "~/app/_trpc/serverClient";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import DeletePost from "./DeletePost";
 interface PostProps {
-  mainPage?: boolean;
+  singlePostPage?: boolean;
   post: {
     id: string;
     title: string;
@@ -36,7 +36,7 @@ interface PostProps {
   };
 }
 
-const Post: FC<PostProps> = async ({ post, mainPage = false }) => {
+const Post: FC<PostProps> = async ({ post, singlePostPage = false }) => {
   const comments = await serverClient.getCommentsByPost({ id: post.id });
   const { getUser } = await getKindeServerSession();
 
@@ -87,15 +87,15 @@ const Post: FC<PostProps> = async ({ post, mainPage = false }) => {
             markdown={post.content}
             className={clsx(
               "px-2 pointer-events-none light-editor",
-              mainPage ? "max-h-24" : ""
+              !singlePostPage ? "max-h-24" : ""
             )}
           />
-          {mainPage && (
+          {!singlePostPage && (
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-900 " />
           )}
         </div>
       </Suspense>
-      {mainPage && (
+      {!singlePostPage && (
         <div className="flex gap-4 flex-wrap">
           <Link href={`/post/${post.id}`}>
             <Button className="hover:opacity-75 transition-opacity duration-150 ease-in">
@@ -105,19 +105,19 @@ const Post: FC<PostProps> = async ({ post, mainPage = false }) => {
           </Link>
         </div>
       )}
-      {!mainPage && !user && (
+      {singlePostPage && !user && (
         <p className="text-slate-300">
           You must be logged in to post comments!
         </p>
       )}
-      {!mainPage && (
+      {singlePostPage && (
         <div className="flex flex-col gap-4">
           {comments?.map((comment) => (
             <Comment key={comment.id} comment={comment} />
           ))}
         </div>
       )}
-      {user && !mainPage && <CommentForm postId={post.id} />}
+      {user && singlePostPage && <CommentForm postId={post.id} />}
       <LikeServerComponent post={post} />
     </div>
   );
