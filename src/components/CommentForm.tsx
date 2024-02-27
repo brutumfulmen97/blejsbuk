@@ -43,7 +43,7 @@ function CommentForm({ postId }: { postId: string }) {
   });
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    if (!user) return null;
+    if (!user) return toast.error("You must be logged in to comment");
     mutation.mutate({
       content: data.content,
       postId: postId,

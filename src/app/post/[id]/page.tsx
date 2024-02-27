@@ -19,7 +19,11 @@ const page: FC<pageProps> = async ({ params }) => {
     return <div>Post not found</div>;
   }
 
-  return <Post post={post} />;
+  return (
+    <div className="p-8 md:p-0">
+      <Post post={post} />
+    </div>
+  );
 };
 
 export default page;

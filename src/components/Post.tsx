@@ -105,6 +105,11 @@ const Post: FC<PostProps> = async ({ post, mainPage = false }) => {
           </Link>
         </div>
       )}
+      {!mainPage && !user && (
+        <p className="text-slate-300">
+          You must be logged in to post comments!
+        </p>
+      )}
       {!mainPage && (
         <div className="flex flex-col gap-4">
           {comments?.map((comment) => (
