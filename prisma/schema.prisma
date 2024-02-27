@@ -8,6 +8,11 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
+enum VoteType {
+  UP
+  DOWN
+}
+
 model Post {
   id          String    @id @default(uuid())
   createdAt   DateTime  @default(now())
@@ -18,8 +23,8 @@ model Post {
   authorName  String
   subredditId String
   Subreddit   Subreddit @relation(fields: [subredditId], references: [id])
-  Comment     Comment[]
-  Likes       Like[]
+  Comments    Comment[]
+  Votes       Vote[]
 }
 
 model Subreddit {
@@ -44,10 +49,11 @@ model Comment {
   Post       Post     @relation(fields: [postId], references: [id])
 }
 
-model Like {
-  id         String @id @default(uuid())
+model Vote {
+  id         String   @id @default(uuid())
   postId     String
   authorId   String
   authorName String
-  Post       Post   @relation(fields: [postId], references: [id])
+  Post       Post     @relation(fields: [postId], references: [id])
+  type       VoteType
 }

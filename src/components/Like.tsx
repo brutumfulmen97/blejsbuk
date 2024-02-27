@@ -1,76 +1,85 @@
-import { Heart } from "lucide-react";
-import { FC } from "react";
-import { Button } from "./ui/moving-border";
+"use client";
+
+import { ArrowBigDown, ArrowBigUp } from "lucide-react";
+import { FC, useState } from "react";
 import { trpc } from "~/app/_trpc/client";
 import toast from "react-hot-toast";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useRouter } from "next/navigation";
+import { usePrevious } from "@mantine/hooks";
 
 interface LikeProps {
-  post: {
-    id: string;
-    Likes: {
-      id: string;
-      authorId: string;
-      authorName: string;
-    }[];
-  };
+  postId: string;
+  initialVotesAmount: number;
+  inititalVote: "UP" | "DOWN" | null | undefined;
 }
 
-const Like: FC<LikeProps> = ({ post }) => {
-  const { user } = useKindeBrowserClient();
+const Like: FC<LikeProps> = ({ postId, initialVotesAmount, inititalVote }) => {
   const router = useRouter();
-  let isLiked = post?.Likes.find((like) => like.authorId === user?.id);
+  const [numOfLikes, setNumOfLikes] = useState(initialVotesAmount);
+  const [currentVote, setCurrentVote] = useState(inititalVote);
+  const previousVote = usePrevious(inititalVote);
 
   const mutation = trpc.likePost.useMutation({
     onSettled: () => {
-      toast.success(!isLiked ? "Liked post" : "Unliked post");
       router.refresh();
     },
-    onError: (err) => {
+    onSuccess: () => {
+      toast.success(true ? "Liked post" : "Unliked post");
+    },
+    onError: (err, vote) => {
+      if (vote.type === "UP") {
+        setNumOfLikes(numOfLikes - 1);
+      } else {
+        setNumOfLikes(numOfLikes + 1);
+      }
+      setCurrentVote(previousVote);
+
       toast.error(err.message);
+    },
+    onMutate: (vote) => {
+      if (currentVote === vote.type) {
+        setCurrentVote(undefined);
+        if (vote.type === "UP") {
+          setNumOfLikes(numOfLikes - 1);
+        } else {
+          setNumOfLikes(numOfLikes + 1);
+        }
+      } else {
+        setCurrentVote(vote.type);
+        if (vote.type === "UP") {
+          setNumOfLikes(numOfLikes + 1);
+        } else {
+          setNumOfLikes(numOfLikes - 1);
+        }
+      }
     },
   });
 
   return (
-    <div className="flex gap-4 flex-wrap items-center">
-      <Button
+    <div className="absolute bottom-8 right-8 flex flex-col justify-center items-center gap-2">
+      <button
         className="hover:opacity-75 transition-opacity duration-150 ease-in"
         onClick={() => {
-          mutation.mutate({ postId: post.id });
+          mutation.mutate({ postId, type: "UP" });
         }}
       >
-        <p className="text-zinc-200 mr-2">
-          {mutation.isPending ? "Processing..." : isLiked ? "Liked" : "Like"}
-        </p>
-        <Heart size={20} color={isLiked ? "red" : "white"} />
-      </Button>
-      {post && post?.Likes?.length > 0 && (
-        <>
-          <p className="text-slate-400">
-            Liked by:{" "}
-            {post?.Likes?.map((like, i) =>
-              i === post?.Likes.length - 1 && i < 5 ? (
-                <span key={like.id}>
-                  {`${user?.given_name} ${user?.family_name}` ===
-                  like.authorName
-                    ? "you"
-                    : like.authorName}
-                </span>
-              ) : (
-                <span key={like.id}>
-                  {`${user?.given_name} ${user?.family_name}` ===
-                  like.authorName
-                    ? "you"
-                    : like.authorName}
-                  ,{" "}
-                </span>
-              )
-            )}
-            {post.Likes?.length > 5 && `and ${post.Likes?.length - 5} others`}
-          </p>
-        </>
-      )}
+        <ArrowBigUp
+          size={24}
+          fill={currentVote === "UP" ? "white" : "transparent"}
+        />
+      </button>
+      <p className="text-sm text-center text-slate-300">{numOfLikes}</p>
+      <button
+        className="hover:opacity-75 transition-opacity duration-150 ease-in"
+        onClick={() => {
+          mutation.mutate({ postId, type: "DOWN" });
+        }}
+      >
+        <ArrowBigDown
+          size={24}
+          fill={currentVote === "DOWN" ? "white" : "transparent"}
+        />
+      </button>
     </div>
   );
 };

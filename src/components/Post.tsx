@@ -1,10 +1,5 @@
-"use client";
-
-import { FC, Suspense, useRef } from "react";
-import { Edit, Loader2, MessageCircleMore, Trash } from "lucide-react";
-import { trpc } from "~/app/_trpc/client";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { useRouter } from "next/navigation";
+import { FC, Suspense } from "react";
+import { Edit, MessageCircleMore, Trash } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { ForwardRefROEditor } from "./Editor/ForwardRefROEditor";
@@ -12,7 +7,11 @@ import clsx from "clsx";
 import CommentForm from "./Comment";
 import Comment from "./CommentView";
 import { Button } from "~/components/ui/moving-border";
-import Like from "./Like";
+import LikeServerComponent from "./LikeServer";
+import { VoteType } from "@prisma/client";
+import { serverClient } from "~/app/_trpc/serverClient";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import DeletePost from "./DeletePost";
 interface PostProps {
   mainPage?: boolean;
   post: {
@@ -27,30 +26,21 @@ interface PostProps {
       name: string;
       id: string;
     };
-    Likes: {
+    Votes: {
       id: string;
       postId: string;
       authorId: string;
       authorName: string;
+      type: VoteType;
     }[];
   };
 }
 
-const Post: FC<PostProps> = ({ post, mainPage = false }) => {
-  const router = useRouter();
-  const editorRef = useRef(null);
-  const comments = trpc.getCommentsByPost.useQuery({ id: post.id });
+const Post: FC<PostProps> = async ({ post, mainPage = false }) => {
+  const comments = await serverClient.getCommentsByPost({ id: post.id });
+  const { getUser } = await getKindeServerSession();
 
-  const mutation = trpc.deletePost.useMutation({
-    onSettled: () => {
-      router.refresh();
-    },
-    onError: (error) => {
-      console.error(error);
-    },
-  });
-
-  const { user } = useKindeBrowserClient();
+  const user = await getUser();
 
   return (
     <div className="relative w-full bg-zinc-900 rounded-2xl p-8 flex flex-col gap-4">
@@ -74,22 +64,10 @@ const Post: FC<PostProps> = ({ post, mainPage = false }) => {
       <div className="flex gap-4 justify-end absolute right-8 top-8">
         {user && user.id == post.authorId && (
           <>
-            <Edit
-              size={20}
-              className="hover:opacity-70 cursor-pointer"
-              onClick={() => router.push(`/post/${post.id}/edit`)}
-            />
-            {mutation.isPending ? (
-              <Loader2 size={20} className="animate-spin" />
-            ) : (
-              <Trash
-                size={20}
-                className="hover:opacity-70 cursor-pointer"
-                onClick={() =>
-                  mutation.mutate({ id: post.id, authorId: post.authorId })
-                }
-              />
-            )}
+            <Link href={`/post/${post.id}/edit`}>
+              <Edit size={20} className="hover:opacity-70 cursor-pointer" />
+            </Link>
+            <DeletePost postId={post.id} authorId={post.authorId} />
           </>
         )}
       </div>
@@ -111,7 +89,6 @@ const Post: FC<PostProps> = ({ post, mainPage = false }) => {
               "px-2 pointer-events-none light-editor",
               mainPage ? "max-h-24" : ""
             )}
-            ref={editorRef}
           />
           {mainPage && (
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-900 " />
@@ -120,25 +97,23 @@ const Post: FC<PostProps> = ({ post, mainPage = false }) => {
       </Suspense>
       {mainPage && (
         <div className="flex gap-4 flex-wrap">
-          <Button
-            onClick={() => router.push(`/post/${post.id}`)}
-            className="hover:opacity-75 transition-opacity duration-150 ease-in"
-          >
-            <p className="text-zinc-200 mr-2">Comment</p>
-            <MessageCircleMore size={20} />
-          </Button>
-          <Like post={post} />
+          <Link href={`/post/${post.id}`}>
+            <Button className="hover:opacity-75 transition-opacity duration-150 ease-in">
+              <p className="text-zinc-200 mr-2">Comment</p>
+              <MessageCircleMore size={20} />
+            </Button>
+          </Link>
         </div>
       )}
       {!mainPage && (
         <div className="flex flex-col gap-4">
-          {comments.data?.map((comment) => (
+          {comments?.map((comment) => (
             <Comment key={comment.id} comment={comment} />
           ))}
         </div>
       )}
-      {!mainPage && <Like post={post} />}
       {user && !mainPage && <CommentForm postId={post.id} />}
+      <LikeServerComponent post={post} />
     </div>
   );
 };

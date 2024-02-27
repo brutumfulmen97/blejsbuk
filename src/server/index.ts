@@ -7,7 +7,7 @@ export const appRouter = router({
   getPosts: publicProcedure.query(async () => {
     return await prisma?.post.findMany({
       orderBy: { createdAt: "desc" },
-      include: { Subreddit: true, Likes: true },
+      include: { Subreddit: true, Votes: true },
     });
   }),
   getPostById: publicProcedure
@@ -21,7 +21,7 @@ export const appRouter = router({
         where: {
           id: input.id,
         },
-        include: { Subreddit: true, Likes: true },
+        include: { Subreddit: true, Votes: true },
       });
     }),
   getPostsByUser: publicProcedure
@@ -37,7 +37,7 @@ export const appRouter = router({
         where: {
           authorId: input?.id,
         },
-        include: { Subreddit: true, Likes: true },
+        include: { Subreddit: true, Votes: true },
         orderBy: { createdAt: "desc" },
       });
     }),
@@ -228,7 +228,7 @@ export const appRouter = router({
         where: {
           subredditId: input.id,
         },
-        include: { Subreddit: true, Likes: true },
+        include: { Subreddit: true, Votes: true },
         orderBy: { createdAt: "desc" },
       });
     }),
@@ -307,14 +307,14 @@ export const appRouter = router({
   getLikesForPost: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input }) => {
-      return await prisma?.like.findMany({
+      return await prisma?.vote.findMany({
         where: {
           postId: input.id,
         },
       });
     }),
   likePost: protectedProcedure
-    .input(z.object({ postId: z.string() }))
+    .input(z.object({ postId: z.string(), type: z.enum(["UP", "DOWN"]) }))
     .mutation(async ({ ctx, input }) => {
       if (!ctx.auth?.id) {
         throw new TRPCError({
@@ -323,28 +323,36 @@ export const appRouter = router({
         });
       }
 
-      const like = await prisma?.like.findFirst({
+      const prevVote = await prisma?.vote.findFirst({
         where: {
           postId: input.postId,
           authorId: ctx.auth.id,
-          authorName: ctx.auth.given_name + " " + ctx.auth.family_name,
         },
       });
 
-      if (like) {
-        await prisma?.like.delete({
-          where: {
-            id: like.id,
-          },
-        });
-      } else {
-        await prisma?.like.create({
-          data: {
-            postId: input.postId,
-            authorId: ctx.auth.id,
-            authorName: ctx.auth.given_name + " " + ctx.auth.family_name,
-          },
-        });
+      if (prevVote) {
+        if (prevVote.type === input.type) {
+          await prisma?.vote.delete({
+            where: {
+              id: prevVote.id,
+            },
+          });
+          return {
+            success: true,
+          };
+        } else {
+          await prisma?.vote.update({
+            where: {
+              id: prevVote.id,
+            },
+            data: {
+              type: input.type,
+            },
+          });
+          return {
+            success: true,
+          };
+        }
       }
 
       return {
