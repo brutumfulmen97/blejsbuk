@@ -29,7 +29,7 @@ const JoinButton: FC<JoinButtonProps> = ({ userId, communityId, members }) => {
   if (!members || !members?.includes(userId)) {
     return (
       <div
-        className="p-2 ml-8 md:ml-0 flex gap-2 items-center rounded-md bg-slate-800 hover:bg-slate-900 cursor-pointer"
+        className="p-2 flex gap-2 items-center rounded-md bg-slate-800 hover:bg-slate-900 cursor-pointer"
         onClick={() => {
           mutation.mutate({
             id: communityId,

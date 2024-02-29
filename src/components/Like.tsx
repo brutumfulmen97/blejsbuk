@@ -41,13 +41,20 @@ const Like: FC<LikeProps> = ({ postId, initialVotesAmount, inititalVote }) => {
         } else {
           setNumOfLikes(numOfLikes + 1);
         }
-      } else {
+      } else if (currentVote === undefined) {
         setCurrentVote(vote.type);
         if (vote.type === "UP") {
           setNumOfLikes(numOfLikes + 1);
         } else {
           setNumOfLikes(numOfLikes - 1);
         }
+      } else {
+        if (vote.type === "UP") {
+          setNumOfLikes(numOfLikes + 2);
+        } else {
+          setNumOfLikes(numOfLikes - 2);
+        }
+        setCurrentVote(vote.type);
       }
     },
   });
@@ -55,7 +62,8 @@ const Like: FC<LikeProps> = ({ postId, initialVotesAmount, inititalVote }) => {
   return (
     <div className="absolute top-16 right-8 flex flex-col justify-center items-center gap-2">
       <button
-        className="hover:opacity-75 transition-opacity duration-150 ease-in"
+        disabled={mutation.isPending}
+        className="hover:opacity-75 disabled:opacity-45 cursor-not-allowed transition-opacity duration-150 ease-in"
         onClick={() => {
           mutation.mutate({ postId, type: "UP" });
         }}
@@ -67,7 +75,8 @@ const Like: FC<LikeProps> = ({ postId, initialVotesAmount, inititalVote }) => {
       </button>
       <p className="text-sm text-center text-slate-300">{numOfLikes}</p>
       <button
-        className="hover:opacity-75 transition-opacity duration-150 ease-in"
+        disabled={mutation.isPending}
+        className="hover:opacity-75 disabled:opacity-45 cursor-not-allowed transition-opacity duration-150 ease-in"
         onClick={() => {
           mutation.mutate({ postId, type: "DOWN" });
         }}

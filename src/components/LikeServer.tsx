@@ -1,7 +1,6 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import Like from "./Like";
 import { VoteType } from "@prisma/client";
-import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/dist/types";
 
 interface LikeServerProps {
   post: {

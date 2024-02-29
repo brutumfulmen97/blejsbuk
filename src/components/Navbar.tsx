@@ -40,9 +40,9 @@ const Navbar = async () => {
 
   return (
     <>
-      <div className="hidden md:block h-screen w-[365px]" />
+      <div className="hidden md:block h-screen md:w-[350px] lg:w-[325px]" />
       <nav className="bg-slate-950 hidden fixed z-[5000] left-0 top-0 bottom-0 md:flex md:min-h-screen flex-col md:justify-between justify-center gap-1 md:gap-8 p-1 md:p-8 items-center md:items-start">
-        <div className="flex md:flex-col md:w-[200px] gap-1 md:gap-8 items-center md:items-start">
+        <div className="flex md:flex-col md:w-[195px] gap-1 md:gap-8 items-center md:items-start">
           {routes.map((route) => {
             if (route.href === "/") {
               return (

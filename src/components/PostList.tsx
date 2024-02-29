@@ -18,6 +18,7 @@ import LikeServerComponent from "./LikeServer";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/dist/types";
 import { PostSkeleton } from "./PostSkeleton";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import Like from "./Like";
 
 // export default async function PostList() {
 //   const posts = await serverClient.getPosts();
@@ -145,6 +146,21 @@ interface PostProps {
 }
 
 const Post: FC<PostProps> = ({ post, singlePostPage = false, user }) => {
+  let _votesAmount = 0;
+  let _currentVote: VoteType | null | undefined = undefined;
+
+  _votesAmount = post.Votes.reduce((acc, like) => {
+    if (like.type === "UP") {
+      return acc + 1;
+    }
+    if (like.type === "DOWN") {
+      return acc - 1;
+    }
+    return acc;
+  }, 0);
+
+  _currentVote = post.Votes.find((vote) => vote.authorId === user?.id)?.type;
+
   return (
     <div className="relative w-full bg-zinc-900 rounded-2xl p-8 flex flex-col gap-4 mb-12">
       <p className="text-sm text-slate-300">by: {post.authorName}</p>
@@ -224,6 +240,11 @@ const Post: FC<PostProps> = ({ post, singlePostPage = false, user }) => {
           You must be logged in to post comments!
         </p>
       )}
+      <Like
+        postId={post.id}
+        initialVotesAmount={_votesAmount}
+        inititalVote={_currentVote}
+      />
       {/* <LikeServerComponent post={post} /> */}
     </div>
   );
