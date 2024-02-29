@@ -120,8 +120,8 @@ const Form = ({
             <Image
               src={file}
               alt="uploaded image"
-              width={200}
-              height={200}
+              width={500}
+              height={500}
               className="w-full h-auto"
             />
           </div>

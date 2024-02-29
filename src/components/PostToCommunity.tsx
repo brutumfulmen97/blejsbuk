@@ -10,7 +10,7 @@ import { Suspense, useRef, useState } from "react";
 import { ForwardRefEditor } from "./Editor/ForwardRefEditor";
 import { ChevronDown, Loader2, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
-import { UploadButton } from "~/utils/uploadthing";
+import { UploadDropzone } from "~/utils/uploadthing";
 import Image from "next/image";
 
 type Inputs = {
@@ -104,7 +104,7 @@ function PostToCommunity({ communityId }: { communityId: string }) {
             }}
           />
         </Suspense>
-        <UploadButton
+        <UploadDropzone
           className="mt-2"
           endpoint="imageUploader"
           onClientUploadComplete={(res) => {
@@ -125,8 +125,8 @@ function PostToCommunity({ communityId }: { communityId: string }) {
             <Image
               src={file}
               alt="uploaded image"
-              width={200}
-              height={200}
+              width={500}
+              height={500}
               className="w-full h-auto"
             />
           </div>

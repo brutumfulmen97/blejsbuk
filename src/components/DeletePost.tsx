@@ -1,6 +1,6 @@
 "use client";
 
-import { Trash } from "lucide-react";
+import { Loader2, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 import toast from "react-hot-toast";
@@ -27,11 +27,16 @@ const DeletePost: FC<DeletePostProps> = ({ postId, authorId }) => {
   });
 
   return (
-    <Trash
-      size={20}
-      onClick={() => mutation.mutate({ id: postId, authorId: authorId })}
-      className="hover:opacity-70 cursor-pointer"
-    />
+    <>
+      {mutation.isPending && <Loader2 size={20} className="animate-spin" />}
+      {!mutation.isPending && (
+        <Trash
+          size={20}
+          onClick={() => mutation.mutate({ id: postId, authorId: authorId })}
+          className="hover:opacity-70 cursor-pointer"
+        />
+      )}
+    </>
   );
 };
 
