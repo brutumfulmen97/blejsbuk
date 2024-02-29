@@ -86,6 +86,7 @@ const Post: FC<PostProps> = async ({ post, singlePostPage = false }) => {
             width={500}
             height={500}
             alt="post image"
+            className="max-h-96 rounded-md cursor-pointer hover:opacity-75 transition-opacity duration-150 ease-in-out object-contain mx-auto"
           />
         </Link>
       )}

@@ -377,6 +377,36 @@ export const appRouter = router({
         success: true,
       };
     }),
+  infinitePosts: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ input }) => {
+      const limit = input.limit ?? 20;
+      const { cursor } = input;
+
+      const posts = await prisma.post.findMany({
+        take: limit + 1,
+        skip: cursor ? 1 : 0,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: { createdAt: "desc" },
+        include: { Subreddit: true, Votes: true },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (posts.length > limit) {
+        const nextItem = posts.pop();
+        nextCursor = nextItem?.id;
+      }
+
+      return {
+        posts,
+        nextCursor,
+      };
+    }),
 });
 
 export type AppRouter = typeof appRouter;
