@@ -127,7 +127,7 @@ const PostEditForm: FC<PostEditFormProps> = ({ post }) => {
       )}
       <button
         type="submit"
-        className="mt-4 px-4 py-2 bg-teal-600 hover:bg-teal-800 rounded-md"
+        className="mt-4 w-full py-2 bg-slate-600 hover:bg-teal-800 rounded-lg  outline outline-slate-400 hover:outline-slate-200"
       >
         EDIT
       </button>

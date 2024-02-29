@@ -7,9 +7,15 @@ interface ProfileCardProps {
 
 const ProfileCard: FC<ProfileCardProps> = ({ user }) => {
   return (
-    <div className="w-full p-4 rounded-md bg-slate-700 mb-8">
-      <h1>
-        Hello, {user.given_name} {user.family_name}!
+    <div className="w-full p-4 rounded-md bg-slate-900 mb-8">
+      <h1 className="text-xl">
+        Hello,{" "}
+        <span className="text-slate-300 font-bold capitalize">
+          {user.given_name}
+        </span>{" "}
+        <span className="text-slate-300 font-bold capitalize">
+          {user.family_name}!
+        </span>
       </h1>
     </div>
   );

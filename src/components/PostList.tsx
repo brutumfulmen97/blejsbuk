@@ -120,7 +120,6 @@ export default function PostList() {
 }
 
 interface PostProps {
-  singlePostPage?: boolean;
   post: {
     id: string;
     title: string;
@@ -145,7 +144,7 @@ interface PostProps {
   user?: KindeUser | null;
 }
 
-const Post: FC<PostProps> = ({ post, singlePostPage = false, user }) => {
+const Post: FC<PostProps> = ({ post, user }) => {
   let _votesAmount = 0;
   let _currentVote: VoteType | null | undefined = undefined;
 
@@ -215,37 +214,24 @@ const Post: FC<PostProps> = ({ post, singlePostPage = false, user }) => {
         >
           <ForwardRefROEditor
             markdown={post.content}
-            className={clsx(
-              "px-2 pointer-events-none light-editor",
-              !singlePostPage ? "max-h-24" : ""
-            )}
+            className="px-2 pointer-events-none light-editor max-h-24"
           />
-          {!singlePostPage && (
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-900 " />
-          )}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-900 " />
         </div>
       </Suspense>
-      {!singlePostPage && (
-        <div className="flex gap-4 flex-wrap">
-          <Link href={`/post/${post.id}`}>
-            <Button className="hover:opacity-75 transition-opacity duration-150 ease-in">
-              <p className="text-zinc-200 mr-2">Comment</p>
-              <MessageCircleMore size={20} />
-            </Button>
-          </Link>
-        </div>
-      )}
-      {singlePostPage && !user && (
-        <p className="text-slate-300">
-          You must be logged in to post comments!
-        </p>
-      )}
+      <div className="flex gap-4 flex-wrap">
+        <Link href={`/post/${post.id}`}>
+          <Button className="hover:opacity-75 transition-opacity duration-150 ease-in">
+            <p className="text-zinc-200 mr-2">Comment</p>
+            <MessageCircleMore size={20} />
+          </Button>
+        </Link>
+      </div>
       <Like
         postId={post.id}
         initialVotesAmount={_votesAmount}
         inititalVote={_currentVote}
       />
-      {/* <LikeServerComponent post={post} /> */}
     </div>
   );
 };

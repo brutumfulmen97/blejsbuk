@@ -9,7 +9,7 @@ import clsx from "clsx";
 import { Suspense, useRef, useState } from "react";
 import { ForwardRefEditor } from "./Editor/ForwardRefEditor";
 import toast from "react-hot-toast";
-import { UploadButton } from "~/utils/uploadthing";
+import { UploadButton, UploadDropzone } from "~/utils/uploadthing";
 import Image from "next/image";
 import { XCircle } from "lucide-react";
 
@@ -61,17 +61,19 @@ const Form = ({
     <>
       <form
         className={clsx(
-          "mb-12 p-8 items-center rounded-md bg-slate-800 text-white outline outline-slate-500 max-w-[400px] w-[80vw]",
+          "mb-12 py-8 px-4 items-center rounded-md bg-slate-900 text-white outline outline-slate-600 max-w-[400px] w-[80vw]",
           orientation === "portrait"
             ? "flex flex-col gap-2"
             : "w-full flex flex-col gap-8"
         )}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h2 className="w-full pb-4 text-center text-xl md:text-3xl border-b border-slate-500">
+        <h2 className="w-full pb-4 text-center text-2xl md:text-3xl border-b border-slate-500">
           What&apos;s on your mind...
         </h2>
-        <label htmlFor="title">Title</label>
+        <label htmlFor="title" className="mt-2">
+          Title
+        </label>
         <input
           placeholder="..."
           className="text-[#60646c] px-4 py-1 rounded-md w-full bg-white"
@@ -84,7 +86,9 @@ const Form = ({
             This field needs to be at least 2 chars long...
           </span>
         )}
-        <label>Content</label>
+        <label htmlFor="content" className="mt-2">
+          Content
+        </label>
         <Suspense fallback={<div />}>
           <ForwardRefEditor
             ref={editorRef}
@@ -95,7 +99,7 @@ const Form = ({
             }}
           />
         </Suspense>
-        <UploadButton
+        <UploadDropzone
           className="mt-2"
           endpoint="imageUploader"
           onClientUploadComplete={(res) => {
@@ -124,7 +128,7 @@ const Form = ({
         )}
         <button
           type="submit"
-          className="mt-4 px-4 py-2 bg-teal-600 hover:bg-teal-800 rounded-md"
+          className="mt-4 w-full py-2 bg-slate-600 hover:bg-teal-800 rounded-lg  outline outline-slate-400 hover:outline-slate-200"
         >
           SUBMIT
         </button>

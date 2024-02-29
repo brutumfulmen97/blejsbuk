@@ -4,6 +4,7 @@ import { serverClient } from "../_trpc/serverClient";
 import Post from "~/components/Post";
 import ProfileCard from "~/components/ProfileCard";
 import { BackgroundGradientAnimation } from "~/components/ui/background-gradient";
+import { TextGenerateEffect } from "~/components/ui/text-generate";
 
 const page = async ({}) => {
   const { getUser } = await getKindeServerSession();
@@ -26,8 +27,8 @@ const page = async ({}) => {
         <ProfileCard user={user} />
       </div>
       <BackgroundGradientAnimation>
-        <h2 className="text-3xl z-20 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          Here are your posts...
+        <h2 className="w-full text-center text-2xl z-20 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <TextGenerateEffect words="Here are your posts..." />
         </h2>
       </BackgroundGradientAnimation>
       <div className="px-8 md:px-0 flex flex-col gap-8">
