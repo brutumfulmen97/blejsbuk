@@ -8,10 +8,14 @@ import { z } from "zod";
 import { trpc } from "~/app/_trpc/client";
 import { ForwardRefEditor } from "./Editor/ForwardRefEditor";
 import toast from "react-hot-toast";
+import { XCircle } from "lucide-react";
+import Image from "next/image";
+import { UploadButton } from "~/utils/uploadthing";
 
 type Inputs = {
   title: string;
   content: string;
+  imageUrl: string | null;
 };
 
 const schema = z.object({
@@ -25,6 +29,7 @@ interface PostEditFormProps {
     content: string;
     authorId: string;
     createdAt: Date;
+    imageUrl: string | null;
   };
 }
 
@@ -32,6 +37,7 @@ const PostEditForm: FC<PostEditFormProps> = ({ post }) => {
   const router = useRouter();
   const [markdown, setMarkdown] = useState(post.content);
   const editorRef = useRef(null);
+  const [file, setFile] = useState<string | null>(post.imageUrl);
 
   const {
     register,
@@ -43,15 +49,20 @@ const PostEditForm: FC<PostEditFormProps> = ({ post }) => {
   });
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    mutation.mutate({ ...data, content: markdown, id: post.id });
+    mutation.mutate({
+      ...data,
+      content: markdown,
+      id: post.id,
+      imageUrl: file ?? "",
+    });
   };
 
   const mutation = trpc.editPost.useMutation({
     onSettled: () => {
       reset();
       toast.success("Post edited!");
-      router.push("/");
       router.refresh();
+      router.push("/");
     },
     onError: (err) => {
       toast.error(err.message);
@@ -87,6 +98,33 @@ const PostEditForm: FC<PostEditFormProps> = ({ post }) => {
           }}
         />
       </Suspense>
+      <UploadButton
+        className="mt-2"
+        endpoint="imageUploader"
+        onClientUploadComplete={(res) => {
+          setFile(res[0].url);
+        }}
+        onUploadError={(err) => {
+          toast.error(err.message);
+        }}
+      />
+      {file && (
+        <div className="relative">
+          <XCircle
+            size={24}
+            fill="#000"
+            className="absolute top-2 right-2 z-10 hover:opacity-50 cursor-pointer"
+            onClick={() => setFile("")}
+          />
+          <Image
+            src={file}
+            alt="uploaded image"
+            width={200}
+            height={200}
+            className="w-full h-auto"
+          />
+        </div>
+      )}
       <button
         type="submit"
         className="mt-4 px-4 py-2 bg-teal-600 hover:bg-teal-800 rounded-md"

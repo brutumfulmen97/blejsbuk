@@ -47,6 +47,7 @@ export const appRouter = router({
         id: z.string(),
         title: z.string(),
         content: z.string(),
+        imageUrl: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -84,6 +85,7 @@ export const appRouter = router({
         data: {
           title: input.title,
           content: input.content,
+          imageUrl: input.imageUrl,
         },
       });
 

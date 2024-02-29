@@ -72,12 +72,12 @@ export default function PostList() {
 
   if (myQuery.isPending) {
     return (
-      <>
+      <div className="px-8 md:px-0">
         <PostSkeleton />
         <PostSkeleton />
         <PostSkeleton />
         <PostSkeleton />
-      </>
+      </div>
     );
   }
 
@@ -90,7 +90,7 @@ export default function PostList() {
   }
 
   return (
-    <div className="flex flex-col gap-8 px-8 md:px-0 pb-16">
+    <div className="flex flex-col px-8 md:px-0 pb-16">
       {myQuery.data.pages.map((page, i) => {
         return (
           <div key={i}>
@@ -101,6 +101,19 @@ export default function PostList() {
         );
       })}
       {myQuery.hasNextPage && <div ref={bottomRef}></div>}
+      {myQuery.isFetchingNextPage && (
+        <div className="-mt-4">
+          <PostSkeleton />
+          <PostSkeleton />
+          <PostSkeleton />
+          <PostSkeleton />
+        </div>
+      )}
+      {!myQuery.hasNextPage && (
+        <div className="text-center text-slate-300">
+          <p>End of posts</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -133,7 +146,7 @@ interface PostProps {
 
 const Post: FC<PostProps> = ({ post, singlePostPage = false, user }) => {
   return (
-    <div className="relative w-full bg-zinc-900 rounded-2xl p-8 flex flex-col gap-4 mb-4">
+    <div className="relative w-full bg-zinc-900 rounded-2xl p-8 flex flex-col gap-4 mb-12">
       <p className="text-sm text-slate-300">by: {post.authorName}</p>
       <p className="text-slate-300 text-sm max-w-[80%]">
         Posted {formatDistanceToNow(post.createdAt)} ago{" "}

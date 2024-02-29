@@ -19,14 +19,6 @@ export default async function Home() {
           The social network for developers
         </p>
       </WavyBackground>
-      {/* <Suspense
-        fallback={
-          <div className="px-8 md:px-0">
-            <PostsSkeleton />
-          </div>
-        }
-      >
-      </Suspense> */}
       <PostList />
     </>
   );
