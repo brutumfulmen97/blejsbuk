@@ -283,6 +283,66 @@ export const appRouter = router({
         include: { Votes: true, Comments: true },
       });
     }),
+  voteOnComment: protectedProcedure
+    .input(
+      z.object({
+        commentId: z.string(),
+        type: z.enum(["UP", "DOWN"]),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.auth?.id) {
+        throw new TRPCError({
+          message: "You must be logged in to vote on a comment.",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      const prevVote = await prisma?.commentVote.findFirst({
+        where: {
+          commentId: input.commentId,
+          authorId: ctx.auth.id,
+        },
+      });
+
+      if (prevVote) {
+        if (prevVote.type === input.type) {
+          await prisma?.commentVote.delete({
+            where: {
+              id: prevVote.id,
+            },
+          });
+          return {
+            success: true,
+          };
+        } else {
+          await prisma?.commentVote.update({
+            where: {
+              id: prevVote.id,
+            },
+            data: {
+              type: input.type,
+            },
+          });
+          return {
+            success: true,
+          };
+        }
+      } else {
+        await prisma?.commentVote.create({
+          data: {
+            commentId: input.commentId,
+            authorName: ctx.auth.given_name + " " + ctx.auth.family_name,
+            authorId: ctx.auth.id,
+            type: input.type,
+          },
+        });
+      }
+
+      return {
+        success: true,
+      };
+    }),
   replyToComment: protectedProcedure
     .input(
       z.object({

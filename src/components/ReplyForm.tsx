@@ -62,6 +62,7 @@ const ReplyForm: FC<ReplyFormProps> = ({ isHidden, parentId, postId }) => {
         isHidden ? "hidden" : ""
       )}
     >
+      {/*TODO click outside */}
       <div className="w-full">
         <textarea
           {...register("content")}
