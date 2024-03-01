@@ -15,10 +15,12 @@ import { XCircle } from "lucide-react";
 
 type Inputs = {
   title: string;
+  content: string;
 };
 
 const schema = z.object({
   title: z.string().min(2),
+  content: z.string().min(2),
 });
 
 const Form = ({
@@ -27,13 +29,14 @@ const Form = ({
   orientation: "portrait" | "landscape";
 }) => {
   const router = useRouter();
-  const [markdown, setMarkdown] = useState("");
   const [file, setFile] = useState("");
   const editorRef = useRef(null);
 
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
@@ -41,21 +44,25 @@ const Form = ({
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     mutation.mutate({
       title: data.title,
-      content: markdown,
+      content: data.content,
       imageUrl: file,
     });
   };
 
   const mutation = trpc.submitPost.useMutation({
     onSettled: () => {
-      toast.success("Post submitted!");
       router.push("/");
       router.refresh();
+    },
+    onSuccess: () => {
+      toast.success("Posted!");
     },
     onError: (err) => {
       toast.error(err.message);
     },
   });
+
+  const markdown = watch("content");
 
   return (
     <>
@@ -92,10 +99,11 @@ const Form = ({
         <Suspense fallback={<div />}>
           <ForwardRefEditor
             ref={editorRef}
-            markdown={markdown}
+            //TODO testirati
+            markdown={markdown ?? ""}
             className="bg-white rounded-md min-h-60 p-4"
             onChange={(m) => {
-              setMarkdown(m);
+              setValue("content", m);
             }}
           />
         </Suspense>

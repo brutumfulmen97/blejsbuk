@@ -15,15 +15,16 @@ import Image from "next/image";
 
 type Inputs = {
   title: string;
+  content: string;
 };
 
 const schema = z.object({
   title: z.string().min(2),
+  content: z.string().min(2),
 });
 
 function PostToCommunity({ communityId }: { communityId: string }) {
   const router = useRouter();
-  const [markdown, setMarkdown] = useState("");
   const [isHidden, setIsHidden] = useState(true);
   const [file, setFile] = useState("");
   const editorRef = useRef(null);
@@ -31,7 +32,9 @@ function PostToCommunity({ communityId }: { communityId: string }) {
   const {
     register,
     handleSubmit,
+    setValue,
     reset,
+    watch,
     formState: { errors },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
@@ -39,11 +42,13 @@ function PostToCommunity({ communityId }: { communityId: string }) {
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     mutation.mutate({
       title: data.title,
-      content: markdown,
+      content: data.content,
+      imageUrl: file,
       subredditId: communityId,
-      imageUrl: file ?? "",
     });
   };
+
+  const markdown = watch("content");
 
   const utils = trpc.useUtils();
 
@@ -51,7 +56,7 @@ function PostToCommunity({ communityId }: { communityId: string }) {
     onSettled: () => {
       router.refresh();
       reset();
-      setMarkdown("");
+      setValue("content", "");
       setIsHidden(true);
       utils.getPostsByCommunity.invalidate();
     },
@@ -94,13 +99,14 @@ function PostToCommunity({ communityId }: { communityId: string }) {
           </span>
         )}
         <label>Content</label>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div />}>
           <ForwardRefEditor
             ref={editorRef}
-            markdown={markdown}
-            className="bg-white rounded-md min-h-48 p-4"
+            //TODO testirati
+            markdown={markdown ?? ""}
+            className="bg-white rounded-md min-h-60 p-4"
             onChange={(m) => {
-              setMarkdown(m);
+              setValue("content", m);
             }}
           />
         </Suspense>

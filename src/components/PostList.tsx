@@ -202,16 +202,12 @@ const Post: FC<PostProps> = ({ post, user }) => {
             width={500}
             height={500}
             alt="post image"
-            className="max-h-96 rounded-md cursor-pointer hover:opacity-75 transition-opacity duration-150 ease-in-out object-contain mx-auto"
+            className="max-h-96 w-auto rounded-md cursor-pointer hover:opacity-75 transition-opacity duration-150 ease-in-out object-contain mx-auto"
           />
         </Link>
       )}
       <Suspense fallback={<p>Loading...</p>}>
-        <div
-          className={clsx(
-            "relative w-full overflow-y-clip transition-all duration-300 ease-in-out"
-          )}
-        >
+        <div className="relative w-full overflow-y-clip transition-all duration-300 ease-in-out">
           <ForwardRefROEditor
             markdown={post.content}
             className="px-2 pointer-events-none light-editor max-h-24"

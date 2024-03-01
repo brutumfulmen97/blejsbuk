@@ -86,7 +86,7 @@ const Post: FC<PostProps> = async ({ post, singlePostPage = false }) => {
             width={500}
             height={500}
             alt="post image"
-            className="max-h-96 rounded-md cursor-pointer hover:opacity-75 transition-opacity duration-150 ease-in-out object-contain mx-auto"
+            className="max-h-96 h-auto rounded-md cursor-pointer hover:opacity-75 transition-opacity duration-150 ease-in-out object-contain mx-auto"
           />
         </Link>
       )}
@@ -126,7 +126,7 @@ const Post: FC<PostProps> = async ({ post, singlePostPage = false }) => {
       {singlePostPage && (
         <div className="flex flex-col gap-4">
           {comments?.map((comment) => (
-            <Comment key={comment.id} comment={comment} />
+            <Comment key={comment.id} comment={comment} postId={post.id} />
           ))}
         </div>
       )}

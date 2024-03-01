@@ -280,7 +280,38 @@ export const appRouter = router({
         where: {
           postId: input.id,
         },
+        include: { Votes: true, Comments: true },
       });
+    }),
+  replyToComment: protectedProcedure
+    .input(
+      z.object({
+        content: z.string(),
+        parentId: z.string(),
+        postId: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.auth?.id) {
+        throw new TRPCError({
+          message: "You must be logged in to reply to a comment.",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      await prisma?.comment.create({
+        data: {
+          content: input.content,
+          parentId: input.parentId,
+          postId: input.postId,
+          authorId: ctx.auth.id,
+          authorName: ctx.auth.given_name + " " + ctx.auth.family_name,
+        },
+      });
+
+      return {
+        success: true,
+      };
     }),
   editCommunityMembers: protectedProcedure
     .input(z.object({ id: z.string(), action: z.enum(["join", "leave"]) }))

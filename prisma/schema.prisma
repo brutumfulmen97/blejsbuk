@@ -40,14 +40,27 @@ model Subreddit {
 }
 
 model Comment {
-  id         String   @id @default(uuid())
-  createdAt  DateTime @default(now())
-  editedAt   DateTime @default(now()) @updatedAt
+  id         String        @id @default(uuid())
+  createdAt  DateTime      @default(now())
+  editedAt   DateTime      @default(now()) @updatedAt
   content    String
   authorId   String
   authorName String
   postId     String
-  Post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Post       Post          @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  parentId   String?
+  Parent     Comment?      @relation("CommentToComment", fields: [parentId], references: [id])
+  Comments   Comment[]     @relation("CommentToComment")
+  Votes      CommentVote[]
+}
+
+model CommentVote {
+  id         String   @id @default(uuid())
+  commentId  String
+  authorId   String
+  authorName String
+  Comment    Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  type       VoteType
 }
 
 model Vote {
