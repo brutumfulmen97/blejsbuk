@@ -2,13 +2,14 @@
 
 import { Comment, Vote, VoteType } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import ReplyForm from "./ReplyForm";
 import ReplyView from "./ReplyView";
 import { Edit2, Reply, XCircle } from "lucide-react";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import VoteOnComment from "./VoteOnComment";
 import EditComment from "./EditComment";
+import { useOnClickOutside } from "~/hooks/useOnClickOutside";
 
 interface CommentViewProps {
   comment: {
@@ -45,6 +46,14 @@ const CommentView: FC<CommentViewProps> = ({ comment, postId }) => {
   _currentVote = comment.Votes?.find(
     (vote) => vote.authorId === user?.id
   )?.type;
+
+  const ref = useRef(null);
+
+  const handleClickOutside = () => {
+    setIsHidden(true);
+  };
+
+  useOnClickOutside(ref, handleClickOutside);
 
   return comment.parentId === null ? (
     <div className="rounded-md border border-slate-400 p-4 relative">
@@ -88,7 +97,9 @@ const CommentView: FC<CommentViewProps> = ({ comment, postId }) => {
           <p className="mt-2">{comment.content}</p>
         )}
       </div>
-      <ReplyForm isHidden={isHidden} parentId={comment.id} postId={postId} />
+      <div ref={ref}>
+        <ReplyForm isHidden={isHidden} parentId={comment.id} postId={postId} />
+      </div>
       <div className="ml-2 flex flex-col gap-2">
         {comment.Comments?.map((reply) => (
           <ReplyView key={reply.id} comment={reply as any} />
