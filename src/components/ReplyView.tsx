@@ -2,17 +2,15 @@
 
 import { Comment } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
-import { FC, useState } from "react";
-import ReplyForm from "./ReplyForm";
+import { FC } from "react";
 
 interface ReplyViewProps {
   comment: Comment & {
     Comments?: Comment[];
   };
-  postId: string;
 }
 
-const ReplyView: FC<ReplyViewProps> = ({ comment, postId }) => {
+const ReplyView: FC<ReplyViewProps> = ({ comment }) => {
   return comment.parentId ? (
     <div className="rounded-md border border-slate-400 p-4">
       <div className="mb-4">

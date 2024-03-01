@@ -9,7 +9,7 @@ import clsx from "clsx";
 import { Suspense, useRef, useState } from "react";
 import { ForwardRefEditor } from "./Editor/ForwardRefEditor";
 import toast from "react-hot-toast";
-import { UploadButton, UploadDropzone } from "~/utils/uploadthing";
+import { UploadDropzone } from "~/utils/uploadthing";
 import Image from "next/image";
 import { XCircle } from "lucide-react";
 

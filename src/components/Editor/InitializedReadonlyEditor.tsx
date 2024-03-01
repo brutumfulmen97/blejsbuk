@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, type ForwardedRef } from "react";
+import { type ForwardedRef } from "react";
 import {
   headingsPlugin,
   listsPlugin,

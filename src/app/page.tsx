@@ -1,7 +1,4 @@
-import { Suspense } from "react";
-import Form from "~/components/Form";
 import PostList from "~/components/PostList";
-import { PostsSkeleton } from "~/components/PostSkeleton";
 import { WavyBackground } from "~/components/ui/wavy-background";
 
 export const dynamic = "force-dynamic";

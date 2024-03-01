@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { FC } from "react";
 import { ArrowBigRight } from "lucide-react";
 import clsx from "clsx";
 import { z } from "zod";

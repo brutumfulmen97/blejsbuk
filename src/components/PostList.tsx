@@ -1,40 +1,19 @@
 "use client";
 
-// import { serverClient } from "~/app/_trpc/serverClient";
 import { trpc } from "~/app/_trpc/client";
 import { VoteType } from "@prisma/client";
 import { FC, Suspense, useEffect, useRef } from "react";
-// import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import CommentForm from "./CommentForm";
 import { Button } from "./ui/moving-border";
 import { Edit, MessageCircleMore } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { ForwardRefROEditor } from "./Editor/ForwardRefROEditor";
-import clsx from "clsx";
 import DeletePost from "./DeletePost";
 import { formatDistanceToNow } from "date-fns";
-import LikeServerComponent from "./LikeServer";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/dist/types";
 import { PostSkeleton } from "./PostSkeleton";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import Like from "./Like";
-
-// export default async function PostList() {
-//   const posts = await serverClient.getPosts();
-
-//   if (!posts) {
-//     return <div>Loading...</div>;
-//   }
-
-//   return (
-//     <div className="flex flex-col gap-8 px-8 md:px-0 pb-16">
-//       {posts.map((post) => (
-//         <Post key={post.id} post={post} />
-//       ))}
-//     </div>
-//   );
-// }
 
 export default function PostList() {
   const bottomRef = useRef<HTMLDivElement>(null);
