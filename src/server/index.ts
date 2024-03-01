@@ -415,6 +415,54 @@ export const appRouter = router({
         },
       });
     }),
+  editComment: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        content: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.auth?.id) {
+        throw new TRPCError({
+          message: "You must be logged in to edit a comment.",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      const comment = await prisma?.comment.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!comment) {
+        throw new TRPCError({
+          message: "Comment not found.",
+          code: "NOT_FOUND",
+        });
+      }
+
+      if (comment.authorId != ctx.auth.id) {
+        throw new TRPCError({
+          message: "You are not authorized to edit this comment.",
+          code: "FORBIDDEN",
+        });
+      }
+
+      await prisma?.comment.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          content: input.content,
+        },
+      });
+
+      return {
+        success: true,
+      };
+    }),
   likePost: protectedProcedure
     .input(z.object({ postId: z.string(), type: z.enum(["UP", "DOWN"]) }))
     .mutation(async ({ ctx, input }) => {

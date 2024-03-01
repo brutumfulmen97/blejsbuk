@@ -5,9 +5,10 @@ import { formatDistanceToNow } from "date-fns";
 import { FC, useState } from "react";
 import ReplyForm from "./ReplyForm";
 import ReplyView from "./ReplyView";
-import { Reply } from "lucide-react";
+import { Edit2, Reply, XCircle } from "lucide-react";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import VoteOnComment from "./VoteOnComment";
+import EditComment from "./EditComment";
 
 interface CommentViewProps {
   comment: {
@@ -25,7 +26,7 @@ interface CommentViewProps {
 
 const CommentView: FC<CommentViewProps> = ({ comment, postId }) => {
   const [isHidden, setIsHidden] = useState(true);
-
+  const [isInEditMode, setIsInEditMode] = useState(false);
   const { user } = useKindeBrowserClient();
 
   let _votesAmount = 0;
@@ -61,11 +62,31 @@ const CommentView: FC<CommentViewProps> = ({ comment, postId }) => {
         </button>
       </div>
       <div className="mb-4">
-        <p className="text-slate-200 text-xs">
-          Posted {formatDistanceToNow(comment.createdAt)} ago by:
-          <span className="text-slate-400"> {comment.authorName}</span>
-        </p>
-        <p className="mt-2">{comment.content}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-slate-200 text-xs">
+            Posted {formatDistanceToNow(comment.createdAt)} ago by:
+            <span className="text-slate-400"> {comment.authorName}</span>
+          </p>
+          {user && user.id === comment.authorId && (
+            <button
+              className="border border-slate-200 hover:bg-slate-700 rounded-md p-1"
+              onClick={() => setIsInEditMode(!isInEditMode)}
+            >
+              {isInEditMode ? <XCircle size={16} /> : <Edit2 size={16} />}
+            </button>
+          )}
+        </div>
+        {isInEditMode ? (
+          <div className="mt-2">
+            <EditComment
+              content={comment.content}
+              commentId={comment.id}
+              setIsInEditMode={setIsInEditMode}
+            />
+          </div>
+        ) : (
+          <p className="mt-2">{comment.content}</p>
+        )}
       </div>
       <ReplyForm isHidden={isHidden} parentId={comment.id} postId={postId} />
       <div className="ml-2 flex flex-col gap-2">
