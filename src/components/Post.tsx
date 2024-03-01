@@ -126,7 +126,11 @@ const Post: FC<PostProps> = async ({ post, singlePostPage = false }) => {
       {singlePostPage && (
         <div className="flex flex-col gap-4">
           {comments?.map((comment) => (
-            <Comment key={comment.id} comment={comment} postId={post.id} />
+            <Comment
+              key={comment.id}
+              comment={comment as any}
+              postId={post.id}
+            />
           ))}
         </div>
       )}
