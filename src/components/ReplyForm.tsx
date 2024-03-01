@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { ArrowBigRight } from "lucide-react";
+import { Dispatch, FC, SetStateAction } from "react";
+import { ArrowBigRight, Loader2 } from "lucide-react";
 import clsx from "clsx";
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -12,6 +12,7 @@ interface ReplyFormProps {
   isHidden: boolean;
   parentId: string;
   postId: string;
+  setIsHidden: Dispatch<SetStateAction<boolean>>;
 }
 
 type Inputs = {
@@ -22,7 +23,12 @@ const schema = z.object({
   content: z.string().min(1),
 });
 
-const ReplyForm: FC<ReplyFormProps> = ({ isHidden, parentId, postId }) => {
+const ReplyForm: FC<ReplyFormProps> = ({
+  isHidden,
+  parentId,
+  postId,
+  setIsHidden,
+}) => {
   const router = useRouter();
   const {
     handleSubmit,
@@ -44,6 +50,7 @@ const ReplyForm: FC<ReplyFormProps> = ({ isHidden, parentId, postId }) => {
   const mutation = trpc.replyToComment.useMutation({
     onSettled: () => {
       router.refresh();
+      setIsHidden(true);
       reset();
     },
     onSuccess: () => {
@@ -80,7 +87,11 @@ const ReplyForm: FC<ReplyFormProps> = ({ isHidden, parentId, postId }) => {
         type="submit"
         className="p-2 border border-slate-100 rounded-md mt-1 hover:bg-slate-800 cursor-pointer"
       >
-        <ArrowBigRight size={20} />
+        {mutation.isPending ? (
+          <Loader2 size={20} className="animate-spin" />
+        ) : (
+          <ArrowBigRight size={20} />
+        )}
       </button>
     </form>
   );

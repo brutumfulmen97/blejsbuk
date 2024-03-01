@@ -98,7 +98,12 @@ const CommentView: FC<CommentViewProps> = ({ comment, postId }) => {
         )}
       </div>
       <div ref={ref}>
-        <ReplyForm isHidden={isHidden} parentId={comment.id} postId={postId} />
+        <ReplyForm
+          isHidden={isHidden}
+          parentId={comment.id}
+          postId={postId}
+          setIsHidden={setIsHidden}
+        />
       </div>
       <div className="ml-2 flex flex-col gap-2">
         {comment.Comments?.map((reply) => (
