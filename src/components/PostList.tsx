@@ -3,8 +3,7 @@
 import { trpc } from "~/app/_trpc/client";
 import { VoteType } from "@prisma/client";
 import { FC, Suspense, useEffect, useRef } from "react";
-import { Button } from "./ui/moving-border";
-import { Edit, MessageCircleMore } from "lucide-react";
+import { Edit, MessageCircleMore, Save } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { ForwardRefROEditor } from "./Editor/ForwardRefROEditor";
@@ -108,6 +107,7 @@ interface PostProps {
     imageUrl: string | null;
     createdAt: Date;
     editedAt: Date;
+    Comments: {}[];
     Subreddit: {
       name: string;
       id: string;
@@ -195,11 +195,19 @@ const Post: FC<PostProps> = ({ post, user }) => {
         </div>
       </Suspense>
       <div className="flex gap-4 flex-wrap">
-        <Link href={`/post/${post.id}`}>
-          <Button className="hover:opacity-75 transition-opacity duration-150 ease-in">
-            <p className="text-zinc-200 mr-2">Comment</p>
-            <MessageCircleMore size={20} />
-          </Button>
+        <Link
+          href={`/post/${post.id}`}
+          className="flex items-center gap-2 bg-neutral-700 p-2 rounded-md  hover:opacity-75 transition-opacity duration-150 ease-in"
+        >
+          <MessageCircleMore size={20} />
+          <p>{post.Comments.length}</p>
+        </Link>
+        <Link
+          href={""}
+          className="flex items-center gap-2 bg-neutral-700 p-2 rounded-md  hover:opacity-75 transition-opacity duration-150 ease-in"
+        >
+          <Save size={20} className="hover:opacity-75 cursor-pointer" />
+          <p>5</p>
         </Link>
       </div>
       <Like

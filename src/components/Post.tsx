@@ -63,7 +63,7 @@ const Post: FC<PostProps> = async ({ post, singlePostPage = false }) => {
           Edited {formatDistanceToNow(post.editedAt)} ago
         </p>
       )}
-      <div className="flex gap-4 justify-end absolute right-8 top-8">
+      <div className="flex gap-4 justify-end">
         {user && user.id == post.authorId && (
           <>
             <Link href={`/post/${post.id}/edit`}>

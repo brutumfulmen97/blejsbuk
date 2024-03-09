@@ -57,46 +57,48 @@ const CommentView: FC<CommentViewProps> = ({ comment, postId }) => {
 
   return comment.parentId === null ? (
     <div className="rounded-md border border-slate-400 p-4 relative">
-      <div className="absolute top-4 right-4 flex items-center gap-2">
-        <VoteOnComment
-          initialVote={_currentVote}
-          votesAmount={_votesAmount}
-          commentId={comment.id}
-        />
-        <button
-          onClick={() => setIsHidden(!isHidden)}
-          className="p-1 border border-slate-200 hover:bg-slate-600 rounded-md"
-        >
-          <Reply size={16} />
-        </button>
-      </div>
-      <div className="mb-4">
-        <div className="flex items-center gap-2">
-          <p className="text-slate-200 text-xs">
-            Posted {formatDistanceToNow(comment.createdAt)} ago by:
-            <span className="text-slate-400"> {comment.authorName}</span>
-          </p>
-          {user && user.id === comment.authorId && (
-            <button
-              className="border border-slate-200 hover:bg-slate-700 rounded-md p-1"
-              onClick={() => setIsInEditMode(!isInEditMode)}
-            >
-              {isInEditMode ? <XCircle size={16} /> : <Edit2 size={16} />}
-            </button>
-          )}
-        </div>
-        {isInEditMode ? (
-          <div className="mt-2">
-            <EditComment
-              content={comment.content}
-              commentId={comment.id}
-              setIsInEditMode={setIsInEditMode}
-            />
+      <div className="flex justify-between flex-wrap gap-2 items-center mb-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <p className="text-slate-200 text-xs">
+              Posted {formatDistanceToNow(comment.createdAt)} ago by:
+              <span className="text-slate-400"> {comment.authorName}</span>
+            </p>
+            {user && user.id === comment.authorId && (
+              <button
+                className="border border-slate-200 hover:bg-slate-700 rounded-md p-1"
+                onClick={() => setIsInEditMode(!isInEditMode)}
+              >
+                {isInEditMode ? <XCircle size={16} /> : <Edit2 size={16} />}
+              </button>
+            )}
           </div>
-        ) : (
-          <p className="mt-2">{comment.content}</p>
-        )}
+        </div>
+        <div className="flex items-center gap-2">
+          <VoteOnComment
+            initialVote={_currentVote}
+            votesAmount={_votesAmount}
+            commentId={comment.id}
+          />
+          <button
+            onClick={() => setIsHidden(!isHidden)}
+            className="p-1 border border-slate-200 hover:bg-slate-600 rounded-md"
+          >
+            <Reply size={16} />
+          </button>
+        </div>
       </div>
+      {isInEditMode ? (
+        <div className="mt-2">
+          <EditComment
+            content={comment.content}
+            commentId={comment.id}
+            setIsInEditMode={setIsInEditMode}
+          />
+        </div>
+      ) : (
+        <p className="mb-4">{comment.content}</p>
+      )}
       <div ref={ref}>
         <ReplyForm
           isHidden={isHidden}

@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { UploadDropzone } from "~/utils/uploadthing";
 import Image from "next/image";
 import { XCircle } from "lucide-react";
+import EditProfileDrawer from "./EditProfileDrawer";
 
 type Inputs = {
   title: string;
@@ -51,13 +52,18 @@ const Form = ({
 
   const mutation = trpc.submitPost.useMutation({
     onSettled: () => {
-      router.push("/");
       router.refresh();
     },
     onSuccess: () => {
+      router.push("/");
       toast.success("Posted!");
     },
     onError: (err) => {
+      if (err.message === "User not found.") {
+        if (editorRef.current) {
+          (editorRef.current as HTMLButtonElement).click();
+        }
+      }
       toast.error(err.message);
     },
   });
@@ -66,6 +72,7 @@ const Form = ({
 
   return (
     <>
+      <EditProfileDrawer ref={editorRef} message={"submit post"} />
       <form
         className={clsx(
           "mb-12 py-8 px-4 items-center rounded-md bg-slate-900 text-white outline outline-slate-600 max-w-[400px] w-[80vw]",
@@ -99,7 +106,6 @@ const Form = ({
         <Suspense fallback={<div />}>
           <ForwardRefEditor
             ref={editorRef}
-            //TODO testirati
             markdown={markdown ?? ""}
             className="bg-white rounded-md min-h-60 p-4"
             onChange={(m) => {

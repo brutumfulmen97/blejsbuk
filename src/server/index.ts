@@ -58,6 +58,19 @@ export const appRouter = router({
         });
       }
 
+      const user = await prisma?.user.findUnique({
+        where: {
+          id: ctx.auth?.id,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          message: "User not found.",
+          code: "NOT_FOUND",
+        });
+      }
+
       const post = await prisma?.post.findUnique({
         where: {
           id: input.id,
@@ -115,6 +128,19 @@ export const appRouter = router({
         });
       }
 
+      const user = await prisma?.user.findUnique({
+        where: {
+          id: ctx.auth?.id,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          message: "User not found.",
+          code: "NOT_FOUND",
+        });
+      }
+
       try {
         await prisma?.post.delete({
           where: {
@@ -146,6 +172,19 @@ export const appRouter = router({
         throw new TRPCError({
           message: "You must be logged in to create a post.",
           code: "UNAUTHORIZED",
+        });
+      }
+
+      const user = await prisma?.user.findUnique({
+        where: {
+          id: ctx.auth?.id,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          message: "User not found.",
+          code: "NOT_FOUND",
         });
       }
 
@@ -182,6 +221,19 @@ export const appRouter = router({
         throw new TRPCError({
           message: "You must be logged in to create a post.",
           code: "UNAUTHORIZED",
+        });
+      }
+
+      const user = await prisma?.user.findUnique({
+        where: {
+          id: ctx.auth?.id,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          message: "User not found.",
+          code: "NOT_FOUND",
         });
       }
 
@@ -260,6 +312,19 @@ export const appRouter = router({
         });
       }
 
+      const user = await prisma?.user.findUnique({
+        where: {
+          id: ctx.auth?.id,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          message: "User not found.",
+          code: "NOT_FOUND",
+        });
+      }
+
       await prisma?.comment.create({
         data: {
           content: input.content,
@@ -295,6 +360,19 @@ export const appRouter = router({
         throw new TRPCError({
           message: "You must be logged in to vote on a comment.",
           code: "UNAUTHORIZED",
+        });
+      }
+
+      const user = await prisma?.user.findUnique({
+        where: {
+          id: ctx.auth?.id,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          message: "User not found.",
+          code: "NOT_FOUND",
         });
       }
 
@@ -359,6 +437,19 @@ export const appRouter = router({
         });
       }
 
+      const user = await prisma?.user.findUnique({
+        where: {
+          id: ctx.auth?.id,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          message: "User not found.",
+          code: "NOT_FOUND",
+        });
+      }
+
       await prisma?.comment.create({
         data: {
           content: input.content,
@@ -380,6 +471,19 @@ export const appRouter = router({
         throw new TRPCError({
           message: "You must be logged in to join a community.",
           code: "UNAUTHORIZED",
+        });
+      }
+
+      const user = await prisma?.user.findUnique({
+        where: {
+          id: ctx.auth?.id,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          message: "User not found.",
+          code: "NOT_FOUND",
         });
       }
 
@@ -430,6 +534,19 @@ export const appRouter = router({
         });
       }
 
+      const user = await prisma?.user.findUnique({
+        where: {
+          id: ctx.auth?.id,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          message: "User not found.",
+          code: "NOT_FOUND",
+        });
+      }
+
       const comment = await prisma?.comment.findUnique({
         where: {
           id: input.id,
@@ -470,6 +587,19 @@ export const appRouter = router({
         throw new TRPCError({
           message: "You must be logged in to like a post.",
           code: "UNAUTHORIZED",
+        });
+      }
+
+      const user = await prisma?.user.findUnique({
+        where: {
+          id: ctx.auth?.id,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          message: "User not found.",
+          code: "NOT_FOUND",
         });
       }
 
@@ -534,7 +664,7 @@ export const appRouter = router({
         skip: cursor ? 1 : 0,
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: { createdAt: "desc" },
-        include: { Subreddit: true, Votes: true },
+        include: { Subreddit: true, Votes: true, Comments: true },
       });
 
       let nextCursor: typeof cursor | undefined = undefined;
@@ -547,6 +677,59 @@ export const appRouter = router({
         posts,
         nextCursor,
       };
+    }),
+  editUserProfile: protectedProcedure
+    .input(
+      z.object({
+        username: z.string(),
+        bio: z.string(),
+        profilePicture: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.auth?.id) {
+        throw new TRPCError({
+          message: "You must be logged in to create a post.",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      const user = await prisma?.user.findUnique({
+        where: {
+          id: ctx.auth?.id,
+        },
+      });
+
+      if (!user) {
+        await prisma?.user.create({
+          data: {
+            id: ctx.auth.id,
+            username: input.username,
+            bio: input.bio,
+            profilePicture: input.profilePicture ?? "",
+          },
+        });
+      } else {
+        await prisma?.user.update({
+          where: {
+            id: ctx.auth.id,
+          },
+          data: {
+            username: input.username,
+            bio: input.bio,
+            profilePicture: input.profilePicture ?? "",
+          },
+        });
+      }
+    }),
+  getUserById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      return await prisma?.user.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
     }),
 });
 
