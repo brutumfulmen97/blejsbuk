@@ -13,6 +13,7 @@ import { serverClient } from "~/app/_trpc/serverClient";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import DeletePost from "./DeletePost";
 import Image from "next/image";
+import SavePost from "./SavePost";
 interface PostProps {
   singlePostPage?: boolean;
   post: {
@@ -41,12 +42,23 @@ interface PostProps {
 const Post: FC<PostProps> = async ({ post, singlePostPage = false }) => {
   const comments = await serverClient.getCommentsByPost({ id: post.id });
   const { getUser } = await getKindeServerSession();
-
   const user = await getUser();
+
+  let postIsSaved = false;
+
+  if (user) {
+    const dbUser = await serverClient.getUser();
+    if (dbUser?.SavedPosts.includes(post.id)) postIsSaved = true;
+  }
 
   return (
     <div className="relative w-full bg-zinc-900 rounded-2xl p-8 flex flex-col gap-4">
-      <p className="text-sm text-slate-300">by: {post.authorName}</p>
+      <Link
+        href={`/profile/${post.authorId}`}
+        className="text-sm text-slate-300 hover:underline"
+      >
+        by: {post.authorName}
+      </Link>
       <p className="text-slate-300 text-sm max-w-[80%]">
         Posted {formatDistanceToNow(post.createdAt)} ago{" "}
         <Link
@@ -108,6 +120,9 @@ const Post: FC<PostProps> = async ({ post, singlePostPage = false }) => {
           )}
         </div>
       </Suspense>
+      {user && singlePostPage && (
+        <SavePost postId={post.id} postIsSaved={postIsSaved} />
+      )}
       {!singlePostPage && (
         <div className="flex gap-4 flex-wrap">
           <Link href={`/post/${post.id}`}>

@@ -37,7 +37,7 @@ export const appRouter = router({
         where: {
           authorId: input?.id,
         },
-        include: { Subreddit: true, Votes: true },
+        include: { Subreddit: true, Votes: true, Comments: true },
         orderBy: { createdAt: "desc" },
       });
     }),
@@ -729,6 +729,112 @@ export const appRouter = router({
         where: {
           id: input.id,
         },
+      });
+    }),
+  savePost: protectedProcedure
+    .input(z.object({ postId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.auth?.id) {
+        throw new TRPCError({
+          message: "You must be logged in to save a post.",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      const user = await prisma?.user.findUnique({
+        where: {
+          id: ctx.auth?.id,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          message: "User not found.",
+          code: "NOT_FOUND",
+        });
+      }
+
+      const post = await prisma?.post.findUnique({
+        where: {
+          id: input.postId,
+        },
+      });
+
+      if (!post) {
+        throw new TRPCError({
+          message: "Post not found.",
+          code: "NOT_FOUND",
+        });
+      }
+
+      if (user.SavedPosts.includes(input.postId)) {
+        await prisma?.user.update({
+          where: {
+            id: ctx.auth.id,
+          },
+          data: {
+            SavedPosts: user.SavedPosts.filter((id) => id !== input.postId),
+          },
+        });
+      } else {
+        await prisma?.user.update({
+          where: {
+            id: ctx.auth.id,
+          },
+          data: {
+            SavedPosts: [...user.SavedPosts, input.postId],
+          },
+        });
+      }
+
+      return {
+        success: true,
+      };
+    }),
+  getUser: protectedProcedure.query(async ({ ctx }) => {
+    if (!ctx.auth?.id) {
+      throw new TRPCError({
+        message: "You must be logged in to get user data.",
+        code: "UNAUTHORIZED",
+      });
+    }
+
+    return await prisma?.user.findUnique({
+      where: {
+        id: ctx.auth.id,
+      },
+    });
+  }),
+  getSavedPosts: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      if (!ctx.auth?.id) {
+        throw new TRPCError({
+          message: "You must be logged in to get saved posts.",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      const user = await prisma?.user.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          message: "User not found.",
+          code: "NOT_FOUND",
+        });
+      }
+
+      return await prisma?.post.findMany({
+        where: {
+          id: {
+            in: user.SavedPosts,
+          },
+        },
+        include: { Subreddit: true, Votes: true, Comments: true },
       });
     }),
 });

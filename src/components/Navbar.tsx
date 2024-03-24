@@ -12,8 +12,8 @@ import Search from "./Search";
 import { FloatingNav } from "./ui/floating-navbar";
 
 const Navbar = async () => {
-  const { isAuthenticated } = await getKindeServerSession();
-  const isAuthed = await isAuthenticated();
+  const { getUser } = await getKindeServerSession();
+  const user = await getUser();
 
   const routes = [
     {
@@ -67,7 +67,7 @@ const Navbar = async () => {
                 </div>
               );
             }
-            if (route.protected && !isAuthed) return null;
+            if (route.protected && !user) return null;
             return (
               <div key={route.href} className="md:w-full">
                 <NavLink
@@ -89,7 +89,7 @@ const Navbar = async () => {
             );
           })}
         </div>
-        {!isAuthed ? (
+        {!user ? (
           <div className="flex md:flex-col gap-8 md:ml-0 ml-auto mr-4">
             <LoginLink className="hover:underline">Log in</LoginLink>
             <RegisterLink className="hover:underline">Register</RegisterLink>
@@ -99,7 +99,7 @@ const Navbar = async () => {
             <div className="group cursor-pointer relative w-[fit-content] rounded-md md:rounded-full p-3 md:bg-slate-600 bg-zinc-600 hover:bg-slate-500">
               <User size={16} />
               <div className="scale-0 group-hover:scale-100 flex flex-col gap-4 w-[150px] rounded-md p-3 bg-[rgb(71,85,105,0.5)] absolute md:bottom-8 md:left-8 left-8 top:8 z-20 transition-all duration-300 ease-in origin-top-left md:origin-bottom-left">
-                <Link href="/profile" className="hover:underline">
+                <Link href={`/profile/${user.id}`} className="hover:underline">
                   Go to profile
                 </Link>
                 <LogoutLink className="hover:underline">Log out</LogoutLink>
@@ -136,7 +136,7 @@ const Navbar = async () => {
                   </div>
                 );
               }
-              if (route.protected && !isAuthed) return null;
+              if (route.protected && !user) return null;
               return (
                 <div key={route.href} className="md:w-full">
                   <NavLink
@@ -158,7 +158,7 @@ const Navbar = async () => {
               );
             })}
           </div>
-          {!isAuthed ? (
+          {!user ? (
             <div className="flex gap-2 justify-center">
               <div className="group cursor-pointer relative w-[fit-content] rounded-md md:rounded-full p-3 md:bg-slate-600 bg-zinc-600 hover:bg-slate-500">
                 <User size={16} />
@@ -175,8 +175,11 @@ const Navbar = async () => {
               <div className="group cursor-pointer relative w-[fit-content] rounded-md md:rounded-full p-3 md:bg-slate-600 bg-zinc-600 hover:bg-slate-500">
                 <User size={16} />
                 <div className="scale-0 group-hover:scale-100 flex flex-col gap-4 w-[150px] rounded-md p-3 bg-[rgb(71,85,105,0.5)] absolute md:bottom-8 md:left-8 right-8 top:8 z-20 transition-all duration-300 ease-in origin-top-right md:origin-bottom-left">
-                  <Link href="/profile" className="hover:underline">
-                    Go to profile
+                  <Link
+                    href={`/profile/${user.id}`}
+                    className="hover:underline"
+                  >
+                    Go to profile{" "}
                   </Link>
                   <LogoutLink className="hover:underline">Log out</LogoutLink>
                 </div>

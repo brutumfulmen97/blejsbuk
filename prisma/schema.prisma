@@ -26,16 +26,16 @@ model Post {
   Subreddit   Subreddit @relation(fields: [subredditId], references: [id], onDelete: Cascade)
   Comments    Comment[]
   Votes       Vote[]
-  User        User?     @relation(fields: [userId], references: [id])
   userId      String?
 }
 
 model User {
-  id             String  @id @default(uuid())
+  id             String   @id @default(uuid())
   profilePicture String?
-  username       String  @unique
+  username       String   @unique
   bio            String?
-  SavedPosts     Post[]
+  userId         String?
+  SavedPosts     String[]
 }
 
 model Subreddit {

@@ -1,101 +1,101 @@
 "use client";
 
-import { trpc } from "~/app/_trpc/client";
-import { VoteType } from "@prisma/client";
-import { FC, Suspense, useEffect, useRef } from "react";
-import { Edit, MessageCircleMore, Save } from "lucide-react";
-import Link from "next/link";
+import { FC, Suspense, useState } from "react";
 import Image from "next/image";
-import { ForwardRefROEditor } from "./Editor/ForwardRefROEditor";
-import DeletePost from "./DeletePost";
+import clsx from "clsx";
+import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
+import { Edit, MessageCircleMore } from "lucide-react";
+import DeletePost from "../DeletePost";
+import { ForwardRefROEditor } from "../Editor/ForwardRefROEditor";
+import Like from "../Like";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/dist/types";
-import { PostSkeleton } from "./PostSkeleton";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import Like from "./Like";
+import { VoteType } from "@prisma/client";
 
-export default function PostList() {
-  const bottomRef = useRef<HTMLDivElement>(null);
+interface UserPostsProps {
+  posts: any[];
+  savedPosts: any[];
+  isYourProfile: boolean;
+  user: KindeUser | null;
+}
 
-  const { user } = useKindeBrowserClient();
-
-  const myQuery = trpc.infinitePosts.useInfiniteQuery(
-    {
-      limit: 10,
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor ?? null,
-    }
-  );
-  useEffect(() => {
-    if (myQuery.hasNextPage) {
-      const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          myQuery.fetchNextPage();
-        }
-      });
-
-      let bottomRefCurrent: any;
-      if (bottomRef.current) {
-        bottomRefCurrent = bottomRef.current;
-
-        observer.observe(bottomRefCurrent);
-      }
-      return () => {
-        if (bottomRefCurrent) {
-          observer.unobserve(bottomRefCurrent);
-        }
-      };
-    }
-  }, [myQuery]);
-
-  if (myQuery.isPending) {
-    return (
-      <div className="px-8 md:px-0">
-        <PostSkeleton />
-        <PostSkeleton />
-        <PostSkeleton />
-        <PostSkeleton />
-      </div>
-    );
-  }
-
-  if (myQuery.error) {
-    return <div>Error: {myQuery.error.message}</div>;
-  }
-
-  if (!myQuery.data) {
-    return <div>No data</div>;
-  }
+const UserPosts: FC<UserPostsProps> = ({
+  posts,
+  savedPosts,
+  isYourProfile,
+}) => {
+  const [activeTab, setActiveTab] = useState<"posts" | "savedPosts">("posts");
 
   return (
-    <div className="flex flex-col px-8 md:px-0 pb-16">
-      {myQuery.data.pages.map((page, i) => {
-        return (
-          <div key={i}>
-            {page.posts.map((post) => {
-              return <Post key={post.id} post={post} user={user} />;
-            })}
+    <>
+      {isYourProfile && (
+        <>
+          <div className="px-8 md:px-0 flex items-center justify-center gap-2 mb-8">
+            <button
+              className={clsx(
+                "w-full rounded-md py-2 px-4 hover:bg-neutral-500",
+                activeTab === "savedPosts"
+                  ? "bg-slate-700 ring-2 ring-slate-500"
+                  : "bg-neutral-700"
+              )}
+              onClick={() => setActiveTab("savedPosts")}
+            >
+              Saved Posts
+            </button>
+            <button
+              className={clsx(
+                "w-full rounded-md py-2 px-4 hover:bg-neutral-500",
+                activeTab === "posts"
+                  ? "bg-slate-700  ring-2 ring-slate-500"
+                  : "bg-neutral-700"
+              )}
+              onClick={() => setActiveTab("posts")}
+            >
+              Your Posts
+            </button>
           </div>
-        );
-      })}
-      {myQuery.hasNextPage && <div ref={bottomRef}></div>}
-      {myQuery.isFetchingNextPage && (
-        <div className="-mt-4">
-          <PostSkeleton />
-          <PostSkeleton />
-          <PostSkeleton />
-          <PostSkeleton />
+          <div className="w-[200%] overflow-x-hidden flex transition-all">
+            <div
+              className={clsx(
+                "px-8 md:px-0 flex flex-col gap-8 transition-all duration-300 ease-in-out flex-1 origin-left",
+                activeTab === "savedPosts" ? "scale-x-[100%]" : "scale-x-0"
+              )}
+            >
+              {savedPosts.map((savedPost) => (
+                <Post key={savedPost.id} post={savedPost} />
+              ))}
+            </div>
+            <div
+              className={clsx(
+                "px-8 md:px-0 flex flex-col gap-8 transition-all duration-300 ease-in-out flex-1 origin-right",
+                activeTab === "posts"
+                  ? "-scale-x-[100%] -translate-x-[200%]"
+                  : "scale-x-0"
+              )}
+            >
+              {posts.map((post) => (
+                <Post
+                  key={post.id}
+                  post={post}
+                  mirror={activeTab === "posts"}
+                />
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+      {!isYourProfile && (
+        <div className="px-8 md:px-0 flex flex-col">
+          {posts.map((post) => (
+            <Post key={post.id} post={post} />
+          ))}
         </div>
       )}
-      {!myQuery.hasNextPage && (
-        <div className="text-center text-slate-300">
-          <p>End of posts</p>
-        </div>
-      )}
-    </div>
+    </>
   );
-}
+};
+
+export default UserPosts;
 
 interface PostProps {
   post: {
@@ -121,9 +121,10 @@ interface PostProps {
     }[];
   };
   user?: KindeUser | null;
+  mirror?: boolean;
 }
 
-const Post: FC<PostProps> = ({ post, user }) => {
+const Post: FC<PostProps> = ({ post, user, mirror = false }) => {
   let _votesAmount = 0;
   let _currentVote: VoteType | null | undefined = undefined;
 
@@ -140,7 +141,12 @@ const Post: FC<PostProps> = ({ post, user }) => {
   _currentVote = post.Votes.find((vote) => vote.authorId === user?.id)?.type;
 
   return (
-    <div className="relative w-full bg-zinc-900 rounded-2xl p-8 flex flex-col gap-4 mb-12">
+    <div
+      className={clsx(
+        "relative w-full bg-zinc-900 rounded-2xl p-8 flex flex-col gap-4 mb-12",
+        mirror ? "-scale-x-[100%]" : ""
+      )}
+    >
       <Link
         href={`/profile/${post.authorId}`}
         className="text-sm text-slate-300 hover:underline"
