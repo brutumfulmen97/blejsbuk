@@ -54,32 +54,34 @@ const UserPosts: FC<UserPostsProps> = ({
               Your Posts
             </button>
           </div>
-          <div className="w-[200%] overflow-x-hidden flex transition-all">
-            <div
-              className={clsx(
-                "px-8 md:px-0 flex flex-col gap-8 transition-all duration-300 ease-in-out flex-1 origin-left",
-                activeTab === "savedPosts" ? "scale-x-[100%]" : "scale-x-0"
-              )}
-            >
-              {savedPosts.map((savedPost) => (
-                <Post key={savedPost.id} post={savedPost} />
-              ))}
-            </div>
-            <div
-              className={clsx(
-                "px-8 md:px-0 flex flex-col gap-8 transition-all duration-300 ease-in-out flex-1 origin-right",
-                activeTab === "posts"
-                  ? "-scale-x-[100%] -translate-x-[200%]"
-                  : "scale-x-0"
-              )}
-            >
-              {posts.map((post) => (
-                <Post
-                  key={post.id}
-                  post={post}
-                  mirror={activeTab === "posts"}
-                />
-              ))}
+          <div className="overflow-x-hidden">
+            <div className="w-[200%] flex transition-all">
+              <div
+                className={clsx(
+                  "px-8 md:px-0 flex flex-col gap-8 transition-all duration-300 ease-in-out flex-1 origin-left",
+                  activeTab === "savedPosts" ? "scale-x-[100%]" : "scale-x-0"
+                )}
+              >
+                {savedPosts.map((savedPost) => (
+                  <Post key={savedPost.id} post={savedPost} />
+                ))}
+              </div>
+              <div
+                className={clsx(
+                  "px-8 md:px-0 flex flex-col gap-8 transition-all duration-300 ease-in-out flex-1 origin-right",
+                  activeTab === "posts"
+                    ? "-scale-x-[100%] -translate-x-[200%]"
+                    : "scale-x-0"
+                )}
+              >
+                {posts.map((post) => (
+                  <Post
+                    key={post.id}
+                    post={post}
+                    mirror={activeTab === "posts"}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </>
@@ -217,7 +219,7 @@ const Post: FC<PostProps> = ({ post, user, mirror = false }) => {
       <Like
         postId={post.id}
         initialVotesAmount={_votesAmount}
-        inititalVote={_currentVote}
+        initialVote={_currentVote}
       />
     </div>
   );

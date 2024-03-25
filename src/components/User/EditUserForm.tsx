@@ -43,7 +43,8 @@ const EditUserForm: FC<EditUserFormProps> = ({
       toast.success("Profile updated!");
     },
     onSettled: () => {
-      router.push(`/`);
+      router.push(`/profile/${userId}`);
+      router.refresh();
     },
     onError: (e) => {
       toast.error(e.message);

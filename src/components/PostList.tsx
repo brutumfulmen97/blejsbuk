@@ -2,7 +2,7 @@
 
 import { trpc } from "~/app/_trpc/client";
 import { VoteType } from "@prisma/client";
-import { FC, Suspense, useEffect, useRef } from "react";
+import { FC, Suspense, useEffect, useRef, useState } from "react";
 import { Edit, MessageCircleMore, Save } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,9 +13,14 @@ import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/dist/types";
 import { PostSkeleton } from "./PostSkeleton";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import Like from "./Like";
+import EditProfileDrawer from "./EditProfileDrawer";
+import EditProfileDrawerContext from "~/utils/EditProfileDrawerContext";
 
 export default function PostList() {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const editRef = useRef<HTMLButtonElement>(null);
+  const [message, setMessage] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   const { user } = useKindeBrowserClient();
 
@@ -48,6 +53,11 @@ export default function PostList() {
       };
     }
   }, [myQuery]);
+  useEffect(() => {
+    if (isOpen && editRef.current) {
+      editRef.current.click();
+    }
+  }, [isOpen]);
 
   if (myQuery.isPending) {
     return (
@@ -69,31 +79,41 @@ export default function PostList() {
   }
 
   return (
-    <div className="flex flex-col px-8 md:px-0 pb-16">
-      {myQuery.data.pages.map((page, i) => {
-        return (
-          <div key={i}>
-            {page.posts.map((post) => {
-              return <Post key={post.id} post={post} user={user} />;
-            })}
+    <EditProfileDrawerContext.Provider
+      value={{
+        isOpen,
+        setIsOpen,
+        message,
+        setMessage,
+      }}
+    >
+      <div className="flex flex-col px-8 md:px-0 pb-16">
+        {myQuery.data.pages.map((page, i) => {
+          return (
+            <div key={i}>
+              {page.posts.map((post) => {
+                return <Post key={post.id} post={post} user={user} />;
+              })}
+            </div>
+          );
+        })}
+        {myQuery.hasNextPage && <div ref={bottomRef}></div>}
+        {myQuery.isFetchingNextPage && (
+          <div className="-mt-4">
+            <PostSkeleton />
+            <PostSkeleton />
+            <PostSkeleton />
+            <PostSkeleton />
           </div>
-        );
-      })}
-      {myQuery.hasNextPage && <div ref={bottomRef}></div>}
-      {myQuery.isFetchingNextPage && (
-        <div className="-mt-4">
-          <PostSkeleton />
-          <PostSkeleton />
-          <PostSkeleton />
-          <PostSkeleton />
-        </div>
-      )}
-      {!myQuery.hasNextPage && (
-        <div className="text-center text-slate-300">
-          <p>End of posts</p>
-        </div>
-      )}
-    </div>
+        )}
+        {!myQuery.hasNextPage && (
+          <div className="text-center text-slate-300">
+            <p>End of posts</p>
+          </div>
+        )}
+        <EditProfileDrawer message={message} ref={editRef} />
+      </div>
+    </EditProfileDrawerContext.Provider>
   );
 }
 
@@ -211,7 +231,7 @@ const Post: FC<PostProps> = ({ post, user }) => {
       <Like
         postId={post.id}
         initialVotesAmount={_votesAmount}
-        inititalVote={_currentVote}
+        initialVote={_currentVote}
       />
     </div>
   );

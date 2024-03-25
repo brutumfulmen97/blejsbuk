@@ -36,7 +36,7 @@ const page = async ({
   return (
     <div className="mt-20 md:mt-0">
       <div className="px-8 md:px-0">
-        <ProfileCard user={user} />
+        <ProfileCard userId={user.id} />
       </div>
       <BackgroundGradientAnimation>
         <h2 className="w-full text-center text-2xl z-20 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">

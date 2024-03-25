@@ -8,6 +8,7 @@ import { z } from "zod";
 import { trpc } from "~/app/_trpc/client";
 import { Button } from "./ui/moving-border";
 import toast from "react-hot-toast";
+import { useEditProfileDrawerContext } from "~/utils/EditProfileDrawerContext";
 
 type Inputs = {
   content: string;
@@ -20,6 +21,7 @@ const schema = z.object({
 function CommentForm({ postId }: { postId: string }) {
   const { user } = useKindeBrowserClient();
   const router = useRouter();
+  const { setIsOpen, setMessage } = useEditProfileDrawerContext();
 
   const {
     register,
@@ -35,6 +37,10 @@ function CommentForm({ postId }: { postId: string }) {
       router.refresh();
     },
     onError: (err) => {
+      if (err.message === "User not found") {
+        setMessage("post comment");
+        setIsOpen(true);
+      }
       toast.error(err.message);
     },
     onSuccess: () => {

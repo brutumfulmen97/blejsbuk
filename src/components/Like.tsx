@@ -6,18 +6,20 @@ import { trpc } from "~/app/_trpc/client";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { usePrevious } from "@mantine/hooks";
+import { useEditProfileDrawerContext } from "~/utils/EditProfileDrawerContext";
 
 interface LikeProps {
   postId: string;
   initialVotesAmount: number;
-  inititalVote: "UP" | "DOWN" | null | undefined;
+  initialVote: "UP" | "DOWN" | null | undefined;
 }
 
-const Like: FC<LikeProps> = ({ postId, initialVotesAmount, inititalVote }) => {
+const Like: FC<LikeProps> = ({ postId, initialVotesAmount, initialVote }) => {
   const router = useRouter();
   const [numOfLikes, setNumOfLikes] = useState(initialVotesAmount);
-  const [currentVote, setCurrentVote] = useState(inititalVote);
-  const previousVote = usePrevious(inititalVote);
+  const [currentVote, setCurrentVote] = useState(initialVote);
+  const previousVote = usePrevious(initialVote);
+  const { setIsOpen, setMessage } = useEditProfileDrawerContext();
 
   const mutation = trpc.likePost.useMutation({
     onSettled: () => {
@@ -30,6 +32,11 @@ const Like: FC<LikeProps> = ({ postId, initialVotesAmount, inititalVote }) => {
         setNumOfLikes(numOfLikes + 1);
       }
       setCurrentVote(previousVote);
+
+      if (err.message === "User not found.") {
+        setMessage("like post");
+        setIsOpen(true);
+      }
 
       toast.error(err.message);
     },
