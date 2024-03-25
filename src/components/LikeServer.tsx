@@ -38,7 +38,7 @@ async function LikeServer({ post }: LikeServerProps) {
   return (
     <Like
       postId={post.id}
-      inititalVote={_currentVote}
+      initialVote={_currentVote}
       initialVotesAmount={_votesAmount}
     />
   );

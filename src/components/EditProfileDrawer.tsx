@@ -29,7 +29,7 @@ const EditProfileDrawer = forwardRef(function EditProfileDrawer(
       <DrawerContent>
         <div className="mx-auto w-full max-w-sm">
           <DrawerHeader>
-            <DrawerTitle>
+            <DrawerTitle className="text-center">
               Finish setting up your profile to {props.message}.
             </DrawerTitle>
             <br />

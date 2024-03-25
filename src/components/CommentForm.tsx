@@ -37,9 +37,11 @@ function CommentForm({ postId }: { postId: string }) {
       router.refresh();
     },
     onError: (err) => {
-      if (err.message === "User not found") {
+      if (err.message === "User not found.") {
         setMessage("post comment");
         setIsOpen(true);
+
+        return;
       }
       toast.error(err.message);
     },
