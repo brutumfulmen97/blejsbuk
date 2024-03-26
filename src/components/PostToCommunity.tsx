@@ -12,6 +12,7 @@ import { ChevronDown, Loader2, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { UploadDropzone } from "~/utils/uploadthing";
 import Image from "next/image";
+import { useEditProfileDrawerContext } from "~/utils/EditProfileDrawerContext";
 
 type Inputs = {
   title: string;
@@ -27,6 +28,7 @@ function PostToCommunity({ communityId }: { communityId: string }) {
   const router = useRouter();
   const [isHidden, setIsHidden] = useState(true);
   const [file, setFile] = useState("");
+  const { setMessage, setIsOpen } = useEditProfileDrawerContext();
   const editorRef = useRef(null);
 
   const {
@@ -64,6 +66,11 @@ function PostToCommunity({ communityId }: { communityId: string }) {
       toast.success("Posted!");
     },
     onError: (err) => {
+      if (err.message === "User not found.") {
+        setMessage("post");
+        setIsOpen(true);
+        return;
+      }
       toast.error(err.message);
     },
   });

@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
 import { trpc } from "~/app/_trpc/client";
+import { useEditProfileDrawerContext } from "~/utils/EditProfileDrawerContext";
 
 type Inputs = {
   name: string;
@@ -19,6 +20,7 @@ const schema = z.object({
 
 function CreateCommunityForm() {
   const router = useRouter();
+  const { setIsOpen, setMessage } = useEditProfileDrawerContext();
 
   const {
     register,
@@ -35,6 +37,11 @@ function CreateCommunityForm() {
       router.push("/");
     },
     onError: (err) => {
+      if (err.message === "User not found.") {
+        setMessage("create community");
+        setIsOpen(true);
+        return;
+      }
       toast.error(err.message);
     },
     onSuccess: () => {

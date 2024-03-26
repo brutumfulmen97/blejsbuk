@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FC } from "react";
 import toast from "react-hot-toast";
 import { trpc } from "~/app/_trpc/client";
+import { useEditProfileDrawerContext } from "~/utils/EditProfileDrawerContext";
 
 interface JoinButtonProps {
   userId: string;
@@ -14,6 +15,7 @@ interface JoinButtonProps {
 
 const JoinButton: FC<JoinButtonProps> = ({ userId, communityId, members }) => {
   const router = useRouter();
+  const { setMessage, setIsOpen } = useEditProfileDrawerContext();
   if (communityId === "general") return null;
 
   const mutation = trpc.editCommunityMembers.useMutation({
@@ -22,6 +24,11 @@ const JoinButton: FC<JoinButtonProps> = ({ userId, communityId, members }) => {
       router.refresh();
     },
     onError: (err) => {
+      if (err.message === "User not found.") {
+        setMessage("join community");
+        setIsOpen(true);
+        return;
+      }
       toast.error(err.message);
     },
   });

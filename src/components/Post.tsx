@@ -105,7 +105,7 @@ const Post: FC<PostProps> = async ({ post, singlePostPage = false }) => {
       <Suspense fallback={<p>Loading...</p>}>
         <div
           className={clsx(
-            "relative w-full overflow-y-clip transition-all duration-300 ease-in-out"
+            "relative w-full overflow-y-clip transition-all duration-300 ease-in-out ring-2 ring-slate-300 rounded-md"
           )}
         >
           <ForwardRefROEditor

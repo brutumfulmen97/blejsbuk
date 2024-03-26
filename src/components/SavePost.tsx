@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 import toast from "react-hot-toast";
 import { trpc } from "~/app/_trpc/client";
+import { useEditProfileDrawerContext } from "~/utils/EditProfileDrawerContext";
 
 interface SavePostProps {
   postId: string;
@@ -14,6 +15,7 @@ interface SavePostProps {
 
 const SavePost: FC<SavePostProps> = ({ postId, postIsSaved }) => {
   const [isSaved, setIsSaved] = useState(postIsSaved);
+  const { setMessage, setIsOpen } = useEditProfileDrawerContext();
   const router = useRouter();
 
   const mutation = trpc.savePost.useMutation({
@@ -22,8 +24,10 @@ const SavePost: FC<SavePostProps> = ({ postId, postIsSaved }) => {
       router.refresh();
     },
     onError: (error) => {
-      if (error.message === "User not found") {
-        toast.error("You must complete profile setup to save posts");
+      if (error.message === "User not found.") {
+        setMessage("save post");
+        setIsOpen(true);
+        return;
       }
       toast.error(error.message);
       setIsSaved(postIsSaved);

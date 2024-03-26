@@ -12,19 +12,22 @@ const ProfileCard: FC<ProfileCardProps> = async ({ userId }) => {
   const user = await serverClient.getUserById({ id: userId });
 
   if (!user) {
-    return <div>Loading...</div>;
+    return (
+      <div className="w-full relative flex p-4 rounded-md bg-slate-900 mb-8 gap-4">
+        Profile setup not completed
+      </div>
+    );
   }
 
   return (
     <div className="w-full relative flex p-4 rounded-md bg-slate-900 mb-8 gap-4">
-      <div>
+      <div className="w-12 h-12 ring-2 ring-slate-300 rounded-full bg-white grid place-content-center">
         {user?.profilePicture ? (
           <Image
             src={user?.profilePicture}
             alt="profile picture"
             width={48}
             height={48}
-            className="rounded-full ring-2 ring-slate-300"
           />
         ) : (
           <User2 size={48} className="rounded-full ring-2 ring-slate-300" />

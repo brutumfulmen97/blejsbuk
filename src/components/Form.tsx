@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import { UploadDropzone } from "~/utils/uploadthing";
 import Image from "next/image";
 import { XCircle } from "lucide-react";
-import EditProfileDrawer from "./EditProfileDrawer";
+import { useEditProfileDrawerContext } from "~/utils/EditProfileDrawerContext";
 
 type Inputs = {
   title: string;
@@ -31,6 +31,7 @@ const Form = ({
 }) => {
   const router = useRouter();
   const [file, setFile] = useState("");
+  const { setMessage, setIsOpen } = useEditProfileDrawerContext();
   const editorRef = useRef(null);
 
   const {
@@ -60,9 +61,9 @@ const Form = ({
     },
     onError: (err) => {
       if (err.message === "User not found.") {
-        if (editorRef.current) {
-          (editorRef.current as HTMLButtonElement).click();
-        }
+        setMessage("submit post");
+        setIsOpen(true);
+        return;
       }
       toast.error(err.message);
     },
@@ -72,7 +73,6 @@ const Form = ({
 
   return (
     <>
-      <EditProfileDrawer ref={editorRef} message={"submit post"} />
       <form
         className={clsx(
           "mb-12 py-8 px-4 items-center rounded-md bg-slate-900 text-white outline outline-slate-600 max-w-[400px] w-[80vw]",

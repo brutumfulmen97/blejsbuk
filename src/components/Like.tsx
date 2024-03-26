@@ -27,10 +27,21 @@ const Like: FC<LikeProps> = ({ postId, initialVotesAmount, initialVote }) => {
     },
     onError: (err, vote) => {
       if (vote.type === "UP") {
-        //TODO ovo resiti da sljaka kako treba
-        setNumOfLikes(numOfLikes - 1);
+        if (previousVote === "DOWN") {
+          setNumOfLikes(numOfLikes - 2);
+        } else if (previousVote === undefined) {
+          setNumOfLikes(numOfLikes - 1);
+        } else {
+          setNumOfLikes(numOfLikes + 1);
+        }
       } else {
-        setNumOfLikes(numOfLikes + 1);
+        if (previousVote === "UP") {
+          setNumOfLikes(numOfLikes + 2);
+        } else if (previousVote === undefined) {
+          setNumOfLikes(numOfLikes + 1);
+        } else {
+          setNumOfLikes(numOfLikes - 1);
+        }
       }
       setCurrentVote(previousVote);
 
