@@ -1,6 +1,6 @@
 import { Edit2, User2 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { FC } from "react";
 import { serverClient } from "~/app/_trpc/serverClient";
 

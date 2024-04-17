@@ -1,7 +1,7 @@
 import { FC, Suspense } from "react";
 import { Edit, MessageCircleMore } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { ForwardRefROEditor } from "./Editor/ForwardRefROEditor";
 import clsx from "clsx";
 import CommentForm from "./Comment";

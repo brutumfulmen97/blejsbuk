@@ -3,7 +3,7 @@ import Image from "next/image";
 import { VoteType } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
 import { Edit, MessageCircleMore } from "lucide-react";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { FC, Suspense } from "react";
 import DeletePost from "./DeletePost";
 import { ForwardRefROEditor } from "./Editor/ForwardRefROEditor";

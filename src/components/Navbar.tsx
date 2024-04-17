@@ -6,7 +6,7 @@ import {
   RegisterLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { CircleFadingPlus, Edit2, Home, Info, User } from "lucide-react";
 import Search from "./Search";
 import { FloatingNav } from "./ui/floating-navbar";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { forwardRef, useEffect } from "react";
 import {
   Drawer,

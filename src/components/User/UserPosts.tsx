@@ -3,7 +3,7 @@
 import { FC, Suspense, useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { formatDistanceToNow } from "date-fns";
 import { Edit, MessageCircleMore } from "lucide-react";
 import DeletePost from "../DeletePost";

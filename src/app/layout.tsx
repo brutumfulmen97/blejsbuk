@@ -5,6 +5,7 @@ import "@mdxeditor/editor/style.css";
 import Provider from "./_trpc/Provider";
 import Navbar from "~/components/Navbar";
 import { Toaster } from "react-hot-toast";
+import { ViewTransitions } from "next-view-transitions";
 
 const roboto = Roboto({
   fallback: ["system-ui", "sans-serif"],
@@ -23,19 +24,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="icon" href="/favicon.png" sizes="any" />
-      </head>
-      <body className={roboto.className}>
-        <Toaster position="top-right" />
-        <Provider>
-          <div className="md:flex">
-            <Navbar />
-            <main className="md:p-8 py-20 w-full">{children}</main>
-          </div>
-        </Provider>
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="en">
+        <head>
+          <link rel="icon" href="/favicon.png" sizes="any" />
+        </head>
+        <body className={roboto.className}>
+          <Toaster position="top-right" />
+          <Provider>
+            <div className="md:flex">
+              <Navbar />
+              <main className="md:p-8 py-20 w-full">{children}</main>
+            </div>
+          </Provider>
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }
